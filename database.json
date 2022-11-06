@@ -1,0 +1,74 @@
+{
+  "movies": [
+    {
+      "id": 1,
+      "title": "Gdzie jest Nemo",
+      "eng_title": "Where is Nemo",
+      "runtime": 90,
+      "year": 2006,
+      "vote_avg": 4.5,
+      "votes_amount": 15,
+      "description": "lorem impsum dobry film naprawde niezły, nie mogłem wytrzymać ze śmiechu."
+    },
+    {
+      "id": 2,
+      "title": "Gdzie jest Nemo",
+      "eng_title": "Where is Nemo",
+      "runtime": 90,
+      "year": 2006,
+      "vote_avg": 4.5,
+      "votes_amount": 15,
+      "description": "lorem impsum dobry film naprawde niezły, nie mogłem wytrzymać ze śmiechu."
+    },
+    {
+      "id": 3,
+      "title": "Gdzie jest Nemo",
+      "eng_title": "Where is Nemo",
+      "runtime": 90,
+      "year": 2006,
+      "vote_avg": 4.5,
+      "votes_amount": 15,
+      "description": "lorem impsum dobry film naprawde niezły, nie mogłem wytrzymać ze śmiechu."
+    },
+    {
+      "id": 4,
+      "title": "Gdzie jest Nemo",
+      "eng_title": "Where is Nemo",
+      "runtime": 90,
+      "year": 2006,
+      "vote_avg": 4.5,
+      "votes_amount": 15,
+      "description": "lorem impsum dobry film naprawde niezły, nie mogłem wytrzymać ze śmiechu."
+    },
+    {
+      "id": 5,
+      "title": "Gdzie jest Nemo",
+      "eng_title": "Where is Nemo",
+      "runtime": 90,
+      "year": 2006,
+      "vote_avg": 4.5,
+      "votes_amount": 15,
+      "description": "lorem impsum dobry film naprawde niezły, nie mogłem wytrzymać ze śmiechu."
+    }
+  ],
+  "reviews": [
+    {
+      "id": 1,
+      "username": "pan ziomek",
+      "movieId": 1,
+      "title": "Dobry film z rybą",
+      "rating": 7,
+      "body": "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Assumenda tempora consequatur incidunt fuga nemo!",
+      "score": 10
+    },
+    {
+      "id": 2,
+      "username": "pan ziomek",
+      "movieId": 1,
+      "title": "Nie podoba mi sie film z rybą",
+      "rating": 7,
+      "body": "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Assumenda tempora consequatur incidunt fuga nemo!",
+      "score": 10
+    }
+  ]
+}

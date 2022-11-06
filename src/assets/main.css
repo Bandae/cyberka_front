@@ -1,0 +1,69 @@
+@font-face {
+  font-family: "Righteous";
+  src: local("Righteous"), url("./fonts/Righteous/Righteous.ttf") format("truetype");
+}
+
+:root {
+  --clr-main-dark: #1C1B20;
+  --clr-white: white;
+  --clr-purple-dark: #3E1362;
+  --clr-purple-medium: #B26ACD;
+  --clr-purple-light: #E68DF2;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  color: var(--clr-white);
+  /* font-size: ; */
+  text-align: center;
+}
+
+body {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background-image: linear-gradient(var(--clr-purple-dark), var(--clr-purple-medium), var(--clr-purple-light));
+}
+
+nav a.router-link-exact-active {
+  color: #42b983;
+}
+
+header {
+  background-image: linear-gradient(var(--clr-main-dark) 60%, rgba(0, 0, 0, 0));
+  position: fixed;
+  top: 0;
+  height: 7rem;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+header h2 {
+  font-family: "Righteous" Arial;
+  font-size: 3rem;
+  letter-spacing: 3px;
+}
+
+img {
+  width: 300px;
+}
+/* 
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  display: inline-block;
+  margin: 0 10px;
+} */
