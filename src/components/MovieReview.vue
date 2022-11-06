@@ -19,14 +19,20 @@
 
     <div>
       <div>
-        <button>up</button>
+        <button @click="sendVote('up')">up</button>
         <div>{{ review.score }}</div>
-        <button>down</button>
+        <button @click="sendVote('down')">down</button>
       </div>
-      <button>napisz kom</button>
-      <!-- <div>ilosc komentarzy i guzik napisz</div> -->
+      <button @click="CommentFormIsOpen = !CommentFormIsOpen">napisz kom</button>
+      <!-- <div>ilosc komentarzy</div> -->
     </div>
   </section>
+  <div class="write-comment" v-show="CommentFormIsOpen">
+    <form @submit.prevent="addComment">
+      <input type="text" id="body-input" v-model="comment_body"/>
+      <button type="submit">Add comment</button>
+    </form>
+  </div>
   <div class="comment-container">
     <CommentComponent
       :key="comment.id"
@@ -41,12 +47,27 @@ import CommentComponent from "@/components/CommentComponent.vue";
 
 export default {
   name: "MovieComponent",
+  data() {
+    return {
+      comment_body: "",
+      CommentFormIsOpen: false,
+    };
+  },
   components: {
     CommentComponent,
   },
   props: {
     review: Object,
   },
+  methods: {
+    addComment() {
+
+    },
+    sendVote(vote_type) {
+      console.log(vote_type);
+      // wyslac, vote_type to up albo down
+    },
+  }
 };
 </script>
 
