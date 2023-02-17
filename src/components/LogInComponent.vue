@@ -1,6 +1,6 @@
 <template>
   <div class="dropdown-container">
-    <button @click="open_dropdown">LOG IN</button>
+    <button @click="dropdown_is_open=!dropdown_is_open">LOG IN</button>
     <div class="dropdown" :class="{ opened: dropdown_is_open}">
       <div class="login-dropdown" v-if="!register_is_open">
         <form>
