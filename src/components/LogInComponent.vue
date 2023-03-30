@@ -1,45 +1,62 @@
+<script>
+import RegisterComponent from './RegisterComponent.vue';
+import { useAuthStore } from "@/stores/auth_store.js";
+import { storeToRefs } from 'pinia';
+import { ref } from 'vue';
+import { useRouter } from 'vue-router'
+
+export default {
+  name: "LogInComponent",
+  components: {
+    RegisterComponent
+  },
+  setup () {
+    let dropdown_is_open = ref(false);
+    const register_is_open = ref(false);
+    const authStore = useAuthStore();
+    const {username, loggedIn} = storeToRefs(authStore);
+    const userInput = ref("")
+    const passInput = ref("")
+
+    const router = useRouter()
+
+    function logIn() {
+      dropdown_is_open = false;
+      authStore.getCSRFToken();
+      authStore.logIn(userInput.value, passInput.value);
+      console.log(dropdown_is_open);
+      // router.push('/');
+    };
+
+    return {
+      dropdown_is_open, register_is_open, username, loggedIn, logIn, userInput, passInput
+    };
+  },
+};
+</script>
+
 <template>
   <div class="dropdown-container">
-    <button @click="dropdown_is_open=!dropdown_is_open">LOG IN</button>
+    <button v-if="!loggedIn" @click="dropdown_is_open=!dropdown_is_open">LOG IN</button>
     <div class="dropdown" :class="{ opened: dropdown_is_open}">
       <div class="login-dropdown" v-if="!register_is_open">
         <form>
           <label>username</label>
-          <input type="text">
+          <input v-model="userInput" type="text">
           <label>password</label>
-          <input type="text">
-          <button>log in</button>
+          <input v-model="passInput" type="text">
+          <button @click.prevent="logIn">log in</button>
         </form>
       </div>
       <RegisterComponent v-if="register_is_open"/>
       <button v-if="!register_is_open" @click="register_is_open = true">register</button>
       <button v-if="register_is_open" @click="register_is_open = false">log in</button>
     </div>
+
+    <button v-if="loggedIn">{{ username }}</button>
   </div>
 </template>
 
-<script>
-import RegisterComponent from './RegisterComponent.vue';
-
-export default {
-  name: "LogInComponent",
-  data() {
-    return {
-      dropdown_is_open: false,
-      register_is_open: false,
-      username: "",
-      password: "",
-    };
-  },
-  components: {
-    RegisterComponent
-  },
-  methods: {
-    logIn() {
-    },
-  }
-};
-</script>
 
 <style scoped>
 .dropdown-container {
