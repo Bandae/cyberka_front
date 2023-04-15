@@ -21,12 +21,19 @@ export default {
   components: {
     LogInComponent,
   },
+  methods: {
+    getCSRFcookie() {
+      return this.$cookies.get("csrftoken")
+    }
+  },
   async created() {
     try {
-      const res = await API('http://localhost:8000/',true).get('user-me/');
+      const token = await this.getCSRFcookie();
+      const res = await API(true).get('user-me/');
       const authStore = useAuthStore();
       authStore.username = res.data.username;
       authStore.loggedIn = true;
+      authStore.csrfToken = token;
     }
     catch (err) {
       console.log(err.message);

@@ -2,13 +2,14 @@ import axios from "axios";
 import { useAuthStore } from "@/stores/auth_store.js";
 // 3000
 export default (
-  url = 'http://localhost:8000/',
   withCredentials = false,
-  headers = {'Content-Type': 'application/json'}) => {
+  headers = {'Content-Type': 'application/json'},
+  url = 'http://localhost:8000/'
+  ) => {
 
   return axios.create({
-    baseURL: url,
     withCredentials: withCredentials,
-    headers: headers
+    headers: headers,
+    baseURL: url
   });
 };
