@@ -10,7 +10,7 @@ export default {
     RegisterComponent
   },
   setup () {
-    let dropdown_is_open = ref(false);
+    const dropdown_is_open = ref(false);
     const register_is_open = ref(false);
     const authStore = useAuthStore();
     const {username, loggedIn} = storeToRefs(authStore);
@@ -19,20 +19,8 @@ export default {
 
     let errors = ref([])
 
-    function valid_form() {
-      if (!userInput.value || !passInput.value){
-        errors.value.push('Both fields must be filled');
-      }
-      else return true
-    };
-
     async function logIn() {
       while (errors.value.length) { errors.value.pop(); }
-      if (!valid_form()){
-        return
-      }
-
-      dropdown_is_open = false;
       
       const server_errors = await authStore.logIn(userInput.value, passInput.value);
       if (server_errors === null) {
@@ -60,12 +48,12 @@ export default {
     <button v-if="!loggedIn" @click="dropdown_is_open=!dropdown_is_open">LOG IN</button>
     <div class="dropdown" :class="{ opened: dropdown_is_open}">
       <div class="login-dropdown" v-if="!register_is_open">
-        <form>
+        <form @submit.prevent="logIn">
           <label>username</label>
           <input v-model="userInput" type="text" required>
           <label>password</label>
           <input v-model="passInput" type="password" required>
-          <button @click.prevent="logIn">log in</button>
+          <button type="submit">log in</button>
         </form>
       </div>
       <RegisterComponent v-if="register_is_open"/>
@@ -120,6 +108,7 @@ export default {
   padding: 1rem;
   font-size: small;
   border-radius: 5%;
+  text-align: left;
 }
 
 .errors ul {
