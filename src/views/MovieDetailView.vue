@@ -36,7 +36,7 @@
     <WriteReviewComponent v-show="ReviewFormIsOpen" />
 
     <div class="reviews-container">
-      <MovieReview
+      <ReviewComponent
         :key="review.id"
         v-for="review in reviews"
         :review="review"
@@ -46,14 +46,14 @@
 </template>
 
 <script>
-import MovieReview from "@/components/MovieReview.vue";
+import ReviewComponent from "@/components/ReviewComponent.vue";
 import WriteReviewComponent from "@/components/WriteReviewComponent.vue";
 import API from "@/services/api";
 
 export default {
   name: "MovieDetailView",
   components: {
-    MovieReview,
+    ReviewComponent,
     WriteReviewComponent,
   },
   data() {

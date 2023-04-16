@@ -1,5 +1,15 @@
 import axios from "axios";
+import { useAuthStore } from "@/stores/auth_store.js";
+// 3000
+export default (
+  withCredentials = false,
+  headers = {'Content-Type': 'application/json'},
+  url = 'http://localhost:8000/'
+  ) => {
 
-export default (url = 'http://localhost:3000/') => {
-  return axios.create({ baseURL: url });
+  return axios.create({
+    withCredentials: withCredentials,
+    headers: headers,
+    baseURL: url
+  });
 };

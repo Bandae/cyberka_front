@@ -7,6 +7,37 @@ import { RouterView } from 'vue-router'
     <h2>CYBERKA</h2>
     <!-- jesli uzytkownik zalogowany to wyswietlic jego imie z linkiem do profilu
           jesli nie to log in i w srodku register -->
+    <LogInComponent />
   </header>
   <RouterView />
 </template>
+
+<script>
+import LogInComponent from "@/components/LogInComponent.vue";
+import API from "./services/api.js";
+import { useAuthStore } from "@/stores/auth_store.js";
+
+export default {
+  components: {
+    LogInComponent,
+  },
+  methods: {
+    getCSRFcookie() {
+      return this.$cookies.get("csrftoken")
+    }
+  },
+  async created() {
+    try {
+      const token = await this.getCSRFcookie();
+      const res = await API(true).get('user-me/');
+      const authStore = useAuthStore();
+      authStore.username = res.data.username;
+      authStore.loggedIn = true;
+      authStore.csrfToken = token;
+    }
+    catch (err) {
+      console.log(err.message);
+    }
+  },
+};
+</script>
