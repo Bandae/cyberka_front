@@ -1,14 +1,44 @@
+<script>
+import ReviewComponent from "@/components/ReviewComponent.vue";
+import WriteReviewComponent from "@/components/WriteReviewComponent.vue";
+import API from "@/services/api";
+import { ref } from 'vue';
+import { useRoute } from 'vue-router'
+
+export default {
+  name: "MovieDetailView",
+  components: {
+    ReviewComponent,
+    WriteReviewComponent,
+  },
+  async setup() {
+    const route = useRoute()
+    const id = route.params.id
+    const ReviewFormIsOpen = ref(false)
+    
+    async function fetchMovie() {
+      const res = await API().get(`movie/${id}`);
+      return res.data;
+    }
+
+    const movie = await fetchMovie()
+
+    return {movie, ReviewFormIsOpen, id}
+  },
+};
+</script>
+
 <template>
   <main>
     <div class="movie-detail-container">
       <div class="main-info">
-        <h5>{{ movie.title }}</h5>
-        <h5>{{ movie.eng_title }}</h5>
+        <h5>{{ movie.title_pl }}</h5>
+        <h5>{{ movie.title_eng }}</h5>
         <div class="vote-info">
           <!-- <svg></svg> -->
           <!-- gwiazdka -->
-          <h5>{{ movie.vote_avg }}</h5>
-          <p>{{ movie.votes_amount }} reviews</p>
+          <h5>{{ movie.avg_rating }}</h5>
+          <!-- <p>{{ movie.votes_amount }} reviews</p> -->
         </div>
       </div>
       <div class="secondary-info">
@@ -21,8 +51,8 @@
           <div>
             <div class="movie-description">{{ movie.description }}</div>
             <div class="movie-genres">{{ movie.genres }}</div>
-            <div class="actors">
-              Director: {{ movie.director }} Actors: {{ movie.actors }}
+            <div>
+              Director: {{ movie.director }} Writer: {{ movie.writer }}
             </div>
           </div>
         </div>
@@ -33,59 +63,17 @@
       <!-- nie wiem jak, moze dropdown form -->
       <!-- i komentarze tak samo -->
     </div>
-    <WriteReviewComponent v-show="ReviewFormIsOpen" />
+    <WriteReviewComponent v-show="ReviewFormIsOpen" :movie-id="id"/>
 
     <div class="reviews-container">
       <ReviewComponent
         :key="review.id"
-        v-for="review in reviews"
+        v-for="review in movie.movie_reviews"
         :review="review"
       />
     </div>
   </main>
 </template>
-
-<script>
-import ReviewComponent from "@/components/ReviewComponent.vue";
-import WriteReviewComponent from "@/components/WriteReviewComponent.vue";
-import API from "@/services/api";
-
-export default {
-  name: "MovieDetailView",
-  components: {
-    ReviewComponent,
-    WriteReviewComponent,
-  },
-  data() {
-    return {
-      movie: Object,
-      reviews: [],
-      ReviewFormIsOpen: false,
-    };
-  },
-  methods: {
-    async fetchMovie() {
-      const id = this.movie_id;
-      const res = await API().get(`movies/${id}`);
-      return res.data;
-    },
-    async fetchReviews() {
-      const id = this.movie_id;
-      const res = await API().get(`movies/${id}/reviews`);
-      return res.data;
-    },
-  },
-  async created() {
-    this.movie = await this.fetchMovie();
-    this.reviews = await this.fetchReviews();
-  },
-  computed: {
-    movie_id() {
-      return parseInt(this.$route.params.id);
-    },
-  },
-};
-</script>
 
 <style scoped>
 main {

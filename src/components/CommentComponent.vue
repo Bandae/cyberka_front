@@ -13,3 +13,11 @@ export default {
   },
 };
 </script>
+
+<!-- <style scoped>
+  section {
+    width: 300;
+    height: 200;
+    background-color: white;
+  }
+</style> -->

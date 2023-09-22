@@ -6,29 +6,20 @@ export const useAuthStore = defineStore({
   state: () => ({
     csrfToken: null,
     loggedIn: false,
-    username: ''
+    username: '',
+    userId: null
   }),
   actions: {
-    // async getCSRFToken() {
-    //   const res = await fetch('http://127.0.0.1:8000/csrf');
-    //   const token = res.headers.get('X-CSRFToken');
-
-    //   this.csrfToken = token;
-    //   return token
-    // },
     async logIn(username, password) {
-      // const token = await this.$cookies.get("csrftoken")
-      // this.csrfToken = token;
       try {
-        const res = await authAPI().post('login/', {username:username, password:password});
+        await authAPI().post('login/', {username:username, password:password});
         this.loggedIn = true;
         this.username = username;
+        const res = await authAPI().get('user-me/');
+        this.userId = res.data.id
         return null
       }
-      catch (err) {
-        console.log(err.response.data);
-        return err.response.data
-      }
+      catch (err) {}
     },
     async logOut() {
       try {
@@ -36,9 +27,7 @@ export const useAuthStore = defineStore({
         this.loggedIn = false;
         this.username = '';
       }
-      catch (err) {
-        console.log(err.response.data);
-      }
+      catch (err) {}
     }
   },
 });

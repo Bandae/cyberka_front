@@ -1,15 +1,16 @@
 <template>
   <section>
-    <div>
-      <h5>{{ review.username }}</h5>
-      <div class="stars">
-        <!-- gwiazdki -->
-        <img src="../assets/logo.png" alt="" />
-        <img src="../assets/logo.png" alt="" />
-        <img src="../assets/logo.png" alt="" />
-        <img src="../assets/logo.png" alt="" />
-        <img src="../assets/logo.png" alt="" />
-      </div>
+    <div class="review-header">
+        <h5>{{ review.username }}</h5>
+        <div class="stars">
+          <!-- gwiazdki -->
+          <img src="../assets/logo.png" alt="" />
+          <img src="../assets/logo.png" alt="" />
+          <img src="../assets/logo.png" alt="" />
+          <img src="../assets/logo.png" alt="" />
+          <img src="../assets/logo.png" alt="" />
+        </div>
+        <p>{{ review.rating_value }}</p>
     </div>
 
     <div>
@@ -18,11 +19,7 @@
     </div>
 
     <div>
-      <div>
-        <button @click="sendVote('up')">up</button>
-        <div>{{ review.score }}</div>
-        <button @click="sendVote('down')">down</button>
-      </div>
+      <VotingComponent :review-id="review.id" :total-vote="review.total_vote"/>
       <button @click="comment_form_is_open = !comment_form_is_open">napisz kom</button>
       <!-- <div>ilosc komentarzy</div> -->
     </div>
@@ -36,7 +33,7 @@
   <div class="comment-container">
     <CommentComponent
       :key="comment.id"
-      v-for="comment in comments"
+      v-for="comment in review.comments"
       :comment="comment"
     />
   </div>
@@ -44,6 +41,8 @@
 
 <script>
 import CommentComponent from "@/components/CommentComponent.vue";
+import VotingComponent from "@/components/VotingComponent.vue";
+import authAPI from '@/services/auth_api.js';
 
 export default {
   name: "ReviewComponent",
@@ -54,20 +53,35 @@ export default {
     };
   },
   components: {
+    VotingComponent,
     CommentComponent,
   },
   props: {
     review: Object,
   },
   methods: {
-    addComment() {
+    async addComment() {
+      try {
+        await authAPI().post('comments/', {review:this.review.id, body:this.comment_body})
+        window.location.reload();
+      }
+      catch (err) {
+        console.log(err)
+        // const server_errors = err.response.data
 
+        // for (const error in server_errors) {
+        //   if (server_errors[error].constructor === Array) {
+        //     errors.value.push(error);
+        //     for (const s_er in server_errors[error]){
+        //       errors.value.push(server_errors[error][s_er]);
+        //     }
+        //   }
+        //   else{
+        //     errors.value.push(server_errors[error]);
+        //   }
+        }
+      }
     },
-    sendVote(vote_type) {
-      console.log(vote_type);
-      // wyslac, vote_type to up albo down
-    },
-  }
 };
 </script>
 
@@ -95,5 +109,10 @@ section > div:nth-of-type(1) {
   padding: 2rem;
   /* width: 80%; */
   /* flex: 3, 1, 75%; */
+}
+
+comment-container {
+  width: 300px;
+  height: 200px;
 }
 </style>

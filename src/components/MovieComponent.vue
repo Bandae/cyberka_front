@@ -4,10 +4,10 @@
     <div>
       <div>
         <router-link :to="`/movie/${movie.id}`">
-          <h3>{{ movie.title }}</h3>
+          <h3>{{ movie.title_pl }}</h3>
         </router-link>
         <div class="main-info">
-          <h5>{{ movie.eng_title }}</h5>
+          <h5>{{ movie.title_eng }}</h5>
           <h5>{{ movie.year }}</h5>
           <h5>{{ movie.runtime }}min</h5>
         </div>
@@ -15,14 +15,13 @@
       <div class="vote-info">
         <!-- <svg></svg> -->
         <!-- gwiazdka -->
-        <h5>{{ movie.vote_avg }}</h5>
-        <p>{{ movie.votes_amount }} reviews</p>
+        <h5>{{ movie.avg_rating }}</h5>
+        <!-- <p>{{ movie.votes_amount }} reviews</p> -->
       </div>
       <div class="secondary-info">
         <div class="movie-description">{{ movie.description }}</div>
         <!-- <div class="movie-genres">{{movie.genres}}</div> -->
-        <!-- <div class="actors">Director: {{movie.director}}  Actors: {{movie.actors}}</div> -->
-        <!-- dodac tu pola moze z iloscia recenzji i link do pisania recenzji -->
+        <div>Director: {{movie.director}}  Writer: {{movie.writer}}</div>
       </div>
     </div>
   </section>

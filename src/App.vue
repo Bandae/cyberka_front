@@ -1,15 +1,20 @@
 <script setup>
+// TODO: jak jest to podswietlic przycisk od danego vote ktore jest true
+// dodac vote amount zeby z django szlo i sie pokazywalo w movie component
+// moze chowac komentarze za guzikiem, po kliknieciu dopiero wziac dokladny serializer recenzji i pokazac a takto tylko ilosc komentarzy. albo 3 pierwsze czy cos takiego.
+// zrobic cos z suspense w app.vue
+// ogarnac wyswietlanie bledow normalnie, wyrzucic caly kod z try catch .post na wsztko (review, vote, comment) do jakiegos service np.
 import { RouterView } from 'vue-router'
 </script>
 
 <template>
   <header>
     <h2>CYBERKA</h2>
-    <!-- jesli uzytkownik zalogowany to wyswietlic jego imie z linkiem do profilu
-          jesli nie to log in i w srodku register -->
     <LogInComponent />
   </header>
-  <RouterView />
+  <Suspense>
+    <RouterView />
+  </Suspense>
 </template>
 
 <script>
