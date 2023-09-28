@@ -10,6 +10,10 @@ const router = createRouter({
       path: "/movie/:id",
       component: () => import("@/views/MovieDetailView.vue"),
     },
+    {
+      path: "/user/:id",
+      component: () => import("@/views/UserProfileView.vue"),
+    },
   ]
 })
 

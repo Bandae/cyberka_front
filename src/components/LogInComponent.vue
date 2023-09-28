@@ -13,7 +13,7 @@ export default {
     const dropdown_is_open = ref(false);
     const register_is_open = ref(false);
     const authStore = useAuthStore();
-    const {username, loggedIn} = storeToRefs(authStore);
+    const {loggedIn, username, userId} = storeToRefs(authStore);
     const userInput = ref("")
     const passInput = ref("")
 
@@ -37,7 +37,7 @@ export default {
     };
 
     return {
-      dropdown_is_open, register_is_open, username, loggedIn, logIn, userInput, passInput, errors, logOut
+      dropdown_is_open, register_is_open, username, loggedIn, logIn, userInput, passInput, errors, logOut, userId
     };
   },
 };
@@ -46,7 +46,7 @@ export default {
 <template>
   <div class="dropdown-container">
     <button v-if="!loggedIn" @click="dropdown_is_open=!dropdown_is_open">LOG IN</button>
-    <div class="dropdown" :class="{ opened: dropdown_is_open}">
+    <div v-if="!loggedIn" class="dropdown" :class="{ opened: dropdown_is_open }">
       <div class="login-dropdown" v-if="!register_is_open">
         <form @submit.prevent="logIn">
           <label>username</label>
@@ -66,8 +66,14 @@ export default {
       <button v-if="register_is_open" @click="register_is_open = false">log in</button>
     </div>
 
-    <button v-if="loggedIn" @click="logOut">{{ username }}</button>
-    <!-- add dropdown menu, logout option, profile link, create movie for staff members -->
+    <button v-if="loggedIn" @click="dropdown_is_open=!dropdown_is_open">{{ username }}</button>
+    <div v-if="loggedIn" class="dropdown" :class="{ opened: dropdown_is_open }">
+      <router-link :to="`/user/${userId}`">
+        <button>profile</button>
+      </router-link>
+      <!--create movie for staff members inside profile page-->
+      <button @click="logOut">log out</button>
+    </div>
   </div>
 </template>
 
