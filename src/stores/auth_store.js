@@ -7,7 +7,8 @@ export const useAuthStore = defineStore({
     csrfToken: null,
     loggedIn: false,
     username: '',
-    userId: null
+    userId: null,
+    is_staff: false
   }),
   actions: {
     async logIn(username, password) {
@@ -17,6 +18,7 @@ export const useAuthStore = defineStore({
         this.username = username;
         const res = await authAPI().get('user-me/');
         this.userId = res.data.id
+        this.is_staff = res.data.is_staff;
         return null
       }
       catch (err) {}

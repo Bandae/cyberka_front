@@ -4,12 +4,15 @@
 // moze chowac komentarze za guzikiem, po kliknieciu dopiero wziac dokladny serializer recenzji i pokazac a takto tylko ilosc komentarzy. albo 3 pierwsze czy cos takiego.
 // zrobic cos z suspense w app.vue
 // ogarnac wyswietlanie bledow normalnie, wyrzucic caly kod z try catch .post na wsztko (review, vote, comment) do jakiegos service np.
+// dodac bledy w logowaniu wyswietlanie
 import { RouterView } from 'vue-router'
 </script>
 
 <template>
   <header>
-    <h2>CYBERKA</h2>
+    <h2>
+      <router-link :to="`/`">CYBERKA</router-link>
+    </h2>
     <LogInComponent />
   </header>
   <Suspense>
@@ -38,6 +41,8 @@ export default {
       const authStore = useAuthStore();
       authStore.username = res.data.username;
       authStore.loggedIn = true;
+      authStore.userId = res.data.id;
+      authStore.is_staff = res.data.is_staff;
       authStore.csrfToken = token;
     }
     catch (err) {

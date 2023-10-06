@@ -1,16 +1,83 @@
 <template>
-  <section>
-    <h5>{{ comment.username }}</h5>
-    <p>{{ comment.body }}</p>
-  </section>
+  <div>
+    <div class="owner-functions" v-if="user_owned">
+      <button @click="edit_form_is_open = !edit_form_is_open">Edit</button>
+      <button @click="deleteComment">Delete</button>
+    </div>
+    <div>
+      <h5>{{ comment.username }}</h5>
+      <p v-if="!edit_form_is_open">{{ comment.body }}</p>
+      <div class="review-form-container" v-if="edit_form_is_open">
+        <form @submit.prevent="editComment">
+          <input type="text" id="body-input" v-model="comment.body"/>
+          <button type="submit">Accept edits</button>
+        </form>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
+import authAPI from '@/services/auth_api.js';
+import { ref } from 'vue';
+import { useAuthStore } from "@/stores/auth_store.js";
+import { storeToRefs } from 'pinia';
+
 export default {
   name: "MovieComponent",
-  props: {
-    comment: Object,
-  },
+  props: ["comment"],
+  setup(props){
+    const edit_form_is_open = ref(false);
+    const authStore = useAuthStore();
+    const {loggedIn, userId} = storeToRefs(authStore);
+    const user_owned = ref(loggedIn.value && userId.value === props.comment.user);
+    // const new_body = ref(props.comment.body);
+    const comment = ref(props.comment)
+
+    async function editComment() {
+      try {
+        await authAPI().patch(`comment/${comment.value.id}/`, {body:comment.value.body})
+        edit_form_is_open.value = false
+      }
+      catch (err) {
+        console.log(err)
+        // const server_errors = err.response.data
+
+        // for (const error in server_errors) {
+        //   if (server_errors[error].constructor === Array) {
+        //     errors.value.push(error);
+        //     for (const s_er in server_errors[error]){
+        //       errors.value.push(server_errors[error][s_er]);
+        //     }
+        //   }
+        //   else{
+        //     errors.value.push(server_errors[error]);
+        //   }
+      }
+    }
+    async function deleteComment() {
+      try {
+        await authAPI().delete(`comment/${comment.value.id}/`)
+        window.location.reload();
+      }
+      catch (err) {
+        console.log(err)
+        // const server_errors = err.response.data
+
+        // for (const error in server_errors) {
+        //   if (server_errors[error].constructor === Array) {
+        //     errors.value.push(error);
+        //     for (const s_er in server_errors[error]){
+        //       errors.value.push(server_errors[error][s_er]);
+        //     }
+        //   }
+        //   else{
+        //     errors.value.push(server_errors[error]);
+        //   }
+      }
+    }
+    return {edit_form_is_open, user_owned, editComment, deleteComment, comment}
+  }
 };
 </script>
 
