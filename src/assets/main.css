@@ -3,12 +3,22 @@
   src: local("Righteous"), url("./fonts/Righteous/Righteous.ttf") format("truetype");
 }
 
+@font-face {
+  font-family: "Roboto";
+  src: local("Roboto"), url("./fonts/Roboto/Roboto.ttf") format("truetype");
+}
+
 :root {
   --clr-main-dark: #1C1B20;
   --clr-white: white;
   --clr-purple-dark: #3E1362;
   --clr-purple-medium: #B26ACD;
   --clr-purple-light: #E68DF2;
+
+  --clr-upvote: #0081D7;
+  --clr-downvote: #B12669;
+
+  --clr-star-disabled: #C4C4C4;
 }
 
 *,
@@ -20,9 +30,9 @@
 }
 
 html {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  color-scheme: dark;
+  font-family: "Roboto", Helvetica, Arial, sans-serif;
   color: var(--clr-white);
-  /* font-size: ; */
   text-align: center;
 }
 
@@ -45,16 +55,57 @@ header {
 }
 
 header h2 {
-  font-family: "Righteous" Arial;
+  font-family: "Righteous", Arial;
   font-size: 3rem;
   letter-spacing: 3px;
   margin-left: auto;
   grid-column: 2;
 }
 
+.icon-button {
+  white-space: nowrap;
+  cursor: pointer;
+  border: 0;
+  background-color: transparent;
+  margin: 0.25em;
+  font-size: 1.1rem;
+}
+
+.icon-button:hover {
+  color: var(--clr-upvote);
+}
+
+.edit-delete-functions {
+  display: flex;
+  justify-content: end;
+}
+
 img {
   width: 300px;
 }
+
+/*  */
+/* stars */
+/*  */
+
+.edit-stars label > svg {
+  cursor: pointer;
+  width: 30px;
+  color: var(--clr-star-disabled);
+}
+
+.edit-stars :not(input[type="radio"]:checked ~ input[type="radio"]) + label > svg,
+.edit-stars input[type="radio"]:checked + label > svg {
+  color: var(--clr-purple-medium);
+}
+
+.edit-stars input[type="radio"] {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  border: 0;
+}
+
 /* 
 ul {
   list-style-type: none;

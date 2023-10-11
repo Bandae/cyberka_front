@@ -1,8 +1,12 @@
 <template>
-  <div>
-    <button @click="sendVote('up')" :disabled="buttonsDisabled">up</button>
-    <div>{{ totalVote }}</div>
-    <button @click="sendVote('down')" :disabled="buttonsDisabled">down</button>
+  <div class="voting-container">
+    <button class="icon-button" @click="sendVote('up')" :disabled="buttonsDisabled" id="upvoteIcon">
+      <UpvoteIcon />
+    </button>
+    <p>{{ totalVote }}</p>
+    <button class="icon-button" @click="sendVote('down')" :disabled="buttonsDisabled" id="downvoteIcon">
+      <UpvoteIcon />
+    </button>
   </div>
 </template>
 
@@ -11,10 +15,14 @@ import authAPI from '@/services/auth_api.js';
 import { useAuthStore } from "@/stores/auth_store.js";
 import { storeToRefs } from 'pinia';
 import { ref } from 'vue';
+import UpvoteIcon from './icons/UpvoteArrow.vue'
 
 export default {
   name: "VotingComponent",
   props: ["reviewId", "totalVote"],
+  components: {
+    UpvoteIcon
+  },
   setup(props){
     const authStore = useAuthStore();
     const {userId, username, loggedIn} = storeToRefs(authStore);
@@ -71,28 +79,21 @@ export default {
 </script>
 
 <style scoped>
-section {
-  text-align: left;
-  margin-top: 5rem;
+.voting-container{
   display: flex;
-  flex-direction: column;
-  background-color: var(--clr-main-dark);
-  border-radius: 20px 20px 0 0;
+  align-items: center;
 }
 
-.stars {
-  display: flex;
+button {
+  width: 40px;
 }
 
-img {
-  width: 30px;
+#upvoteIcon {
+  color: var(--clr-upvote);
 }
 
-section > div:nth-of-type(1) {
-  display: flex;
-  justify-content: space-between;
-  padding: 2rem;
-  /* width: 80%; */
-  /* flex: 3, 1, 75%; */
+#downvoteIcon {
+  transform: rotate(180deg);
+  color: var(--clr-downvote);
 }
 </style>

@@ -1,6 +1,9 @@
 <script>
 import ReviewComponent from "@/components/ReviewComponent.vue";
 import WriteReviewComponent from "@/components/WriteReviewComponent.vue";
+import DeleteIcon from "@/components/icons/IconDelete.vue";
+import EditIcon from "@/components/icons/IconEdit.vue";
+import StarIcon from '@/components/icons/IconStar.vue'
 import API from "@/services/api";
 import authAPI from '@/services/auth_api.js';
 import { ref } from 'vue';
@@ -13,6 +16,9 @@ export default {
   components: {
     ReviewComponent,
     WriteReviewComponent,
+    DeleteIcon,
+    EditIcon,
+    StarIcon
   },
   async setup() {
     const route = useRoute()
@@ -89,10 +95,14 @@ export default {
 
 <template>
   <div class="container-all">
-    <div class="movie-detail-container">
-      <div class="staff-functions" v-if="allow_movie_editing">
-        <button @click="edit_form_is_open = !edit_form_is_open">Edit</button>
-        <button @click="deleteMovie">Delete</button>
+    <div class="movie-container">
+      <div class="edit-delete-functions" v-if="allow_movie_editing">
+        <button class="icon-button" @click="edit_form_is_open = !edit_form_is_open">
+          <EditIcon />
+        </button>
+        <button class="icon-button" @click="deleteMovie">
+          <DeleteIcon />
+        </button>
       </div>
       <div class="movie-edit-form-container" v-if="edit_form_is_open">
         <form @submit.prevent="editMovie">
@@ -106,38 +116,41 @@ export default {
         </form>
       </div>
       <div class="info-container" v-if="!edit_form_is_open">
-        <div class="main-info">
-          <h5>{{ movie.title_pl }}</h5>
-          <h5>{{ movie.title_eng }}</h5>
-          <div class="vote-info">
-            <!-- <svg></svg> -->
-            <!-- gwiazdka -->
-            <h5>{{ movie.avg_rating }}</h5>
-            <!-- <p>{{ movie.votes_amount }} reviews</p> -->
-          </div>
-        </div>
-        <div class="secondary-info">
-          <img src="" alt="" />
-          <div class="secondary-info-text">
+        <img src="../assets/logo.svg" alt="" />
+        <div>
+          <div>
             <div>
-              <h5>{{ movie.year }}</h5>
-              <h5>{{ movie.runtime }}</h5>
-            </div>
-            <div>
-              <div class="movie-description">{{ movie.description }}</div>
-              <div class="movie-genres">{{ movie.genres }}</div>
-              <div>
-                Director: {{ movie.director }} Writer: {{ movie.writer }}
+              <h3>{{ movie.title_pl }}</h3>
+              <div class="main-info">
+                <h4>{{ movie.title_eng }}</h4>
+                <h4>{{ movie.year }}</h4>
+                <h4>{{ movie.runtime }}min</h4>
               </div>
+            </div>
+            <div class="vote-info">
+              <StarIcon />
+              <div>
+                <h5>{{ movie.avg_rating }}</h5>
+                <p>{{ movie.review_amount }} reviews</p>
+              </div>
+            </div>
+            <div class="secondary-info">
+              <div class="movie-description">{{ movie.description }}</div>
+              <div>Director: {{movie.director}}  Writer: {{movie.writer}}</div>
             </div>
           </div>
         </div>
       </div>
-      <button @click="ReviewFormIsOpen = !ReviewFormIsOpen">
-        Write review
-      </button>
-      <!-- nie wiem jak, moze dropdown form -->
-      <!-- i komentarze tak samo -->
+      <br>
+      <div class="write-review-container">
+        <div>
+          <span class="triangle"></span>
+          <h2>User Reviews</h2>
+        </div>
+        <button @click="ReviewFormIsOpen = !ReviewFormIsOpen">
+          Write review
+        </button>
+      </div>
     </div>
     <WriteReviewComponent v-show="ReviewFormIsOpen" :movie-id="id"/>
 
@@ -159,9 +172,10 @@ export default {
   margin-top: 8rem;
 }
 
-.movie-detail-container {
+.movie-container {
   text-align: left;
   margin-top: 5rem;
+  padding: 2em;
   display: flex;
   flex-direction: column;
   width: 80%;
@@ -169,34 +183,42 @@ export default {
   border-radius: 20px 20px 0 0;
 }
 
-h3,
-h5 {
+.info-container {
+  display: flex;
+}
+
+h3, h4 {
   line-height: 1.2;
   font-size: 2rem;
+  padding-bottom: 1em;
+}
+h4 {
+  font-size: 1.5rem;
 }
 h5 {
+  line-height: 1.2;
   font-size: 1.5rem;
 }
 
 img {
-  padding: 2rem 2rem 2rem 2rem;
   margin-right: 3rem;
-  flex: 1, 0, 50%;
-}
-.main-info {
-  display: flex;
-  gap: 20px 20px;
-  padding: 2em;
 }
 
-.main-info > * {
-  margin-bottom: 0;
-  flex: 1, 0, 50%;
-  gap: 20px 20px;
+.main-info {
+  display: flex;
+  gap: 20px;
 }
 
 .vote-info {
   display: flex;
+  margin-bottom: 1em;
+}
+
+.vote-info > div {
+  display: flex;
+  flex-direction: column;
+  justify-content: end;
+  margin-left: 1em;
 }
 
 .secondary-info {
@@ -210,5 +232,50 @@ img {
 
 .secondary-info-text > div:nth-of-type(1) {
   display: flex;
+}
+
+.write-review-container {
+  display: flex;
+  padding: 4em;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.write-review-container > div {
+  display: grid;
+}
+
+.write-review-container > div > h2 {
+  grid-row: 2;
+  grid-column: 2 / 5;
+  z-index: 3;
+}
+
+.triangle {
+  grid-row: 1 / 4;
+  grid-column: 1 / 4;
+  width: 0px;
+  height: 0px;
+  border-style: solid;
+  border-width: 60px 60px 0 0;
+  border-color: var(--clr-purple-medium) transparent transparent transparent;
+  transform: rotate(0deg);
+}
+
+.write-review-container > button {
+  cursor: pointer;
+  border: 0;
+  background-color: var(--clr-purple-medium);
+  padding: 0.1em 0.6em;
+  border-radius: 20px;
+  font-size: 1.5rem;
+}
+
+.vote-info svg {
+  color: var(--clr-purple-medium);
+}
+
+.reviews-container {
+  width: 80%;
 }
 </style>

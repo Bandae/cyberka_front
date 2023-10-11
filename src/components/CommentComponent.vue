@@ -1,8 +1,12 @@
 <template>
-  <div>
-    <div class="owner-functions" v-if="user_owned">
-      <button @click="edit_form_is_open = !edit_form_is_open">Edit</button>
-      <button @click="deleteComment">Delete</button>
+  <div class="comment-container">
+    <div class="edit-delete-functions" v-if="user_owned">
+      <button class="icon-button" @click="edit_form_is_open = !edit_form_is_open">
+        <EditIcon />
+      </button>
+      <button class="icon-button" @click="deleteComment">
+        <DeleteIcon />
+      </button>
     </div>
     <div>
       <h5>{{ comment.username }}</h5>
@@ -19,12 +23,18 @@
 
 <script>
 import authAPI from '@/services/auth_api.js';
+import DeleteIcon from "@/components/icons/IconDelete.vue";
+import EditIcon from "@/components/icons/IconEdit.vue";
 import { ref } from 'vue';
 import { useAuthStore } from "@/stores/auth_store.js";
 import { storeToRefs } from 'pinia';
 
 export default {
   name: "MovieComponent",
+  components: {
+    DeleteIcon,
+    EditIcon
+  },
   props: ["comment"],
   setup(props){
     const edit_form_is_open = ref(false);
@@ -81,10 +91,12 @@ export default {
 };
 </script>
 
-<!-- <style scoped>
-  section {
-    width: 300;
-    height: 200;
-    background-color: white;
-  }
-</style> -->
+<style scoped>
+.comment-container {
+  text-align: left;
+  margin-top: 2em;
+  width: 80%;
+  padding: 0.5em;
+  background-color: var(--clr-main-dark);
+}
+</style>

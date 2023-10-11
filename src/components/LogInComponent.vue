@@ -1,5 +1,6 @@
 <script>
 import RegisterComponent from './RegisterComponent.vue';
+import AccountIcon from './icons/AccountCircle.vue'
 import { useAuthStore } from "@/stores/auth_store.js";
 import { storeToRefs } from 'pinia';
 import { ref } from 'vue';
@@ -7,7 +8,8 @@ import { ref } from 'vue';
 export default {
   name: "LogInComponent",
   components: {
-    RegisterComponent
+    RegisterComponent,
+    AccountIcon
   },
   setup () {
     const dropdown_is_open = ref(false);
@@ -37,7 +39,7 @@ export default {
     };
 
     return {
-      dropdown_is_open, register_is_open, username, loggedIn, logIn, userInput, passInput, errors, logOut, userId
+      dropdown_is_open, register_is_open, username, loggedIn, logIn, userInput, passInput, errors, logOut, userId, AccountIcon
     };
   },
 };
@@ -66,13 +68,14 @@ export default {
       <button v-if="register_is_open" @click="register_is_open = false">log in</button>
     </div>
 
-    <button v-if="loggedIn" @click="dropdown_is_open=!dropdown_is_open">{{ username }}</button>
-    <div v-if="loggedIn" class="dropdown" :class="{ opened: dropdown_is_open }">
+    <button class="icon-button" v-if="loggedIn" @click="dropdown_is_open=!dropdown_is_open">
+      <AccountIcon />
+    </button>
+    <div v-if="loggedIn" class="dropdown menu-dropdown" :class="{ opened: dropdown_is_open }">
       <router-link :to="`/user/${userId}`">
-        <button>profile</button>
+        <button class="icon-button">{{ username }}</button>
       </router-link>
-      <!--create movie for staff members inside profile page-->
-      <button @click="logOut">log out</button>
+      <button class="icon-button" @click="logOut">log out</button>
     </div>
   </div>
 </template>
@@ -127,5 +130,11 @@ input {
 
 label {
   left: 0;
+}
+
+.icon-button > svg {
+  width: 40px;
+  height: 40px;
+  color: var(--clr-white);
 }
 </style>

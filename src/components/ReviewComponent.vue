@@ -1,32 +1,22 @@
 <template>
-  <section>
-    <div class="owner-functions" v-if="user_owned">
-      <button @click="edit_form_is_open = !edit_form_is_open">Edit</button>
-      <button @click="deleteReview">Delete</button>
+  <div class="review-container">
+    <div class="edit-delete-functions" v-if="user_owned">
+      <button class="icon-button" @click="edit_form_is_open = !edit_form_is_open">
+        <EditIcon />
+      </button>
+      <button class="icon-button" @click="deleteReview">
+        <DeleteIcon />
+      </button>
     </div>
     <div class="review-form-container" v-if="edit_form_is_open">
       <form @submit.prevent="editReview">
-        <div class="stars">
-          <input type="radio" name="star" value="1" id="star1" v-model="new_rating_value"/>
-          <label for="star1"></label>
-          <input type="radio" name="star" value="2" id="star2" v-model="new_rating_value"/>
-          <label for="star2"></label>
-          <input type="radio" name="star" value="3" id="star3" v-model="new_rating_value"/>
-          <label for="star3"></label>
-          <input type="radio" name="star" value="4" id="star4" v-model="new_rating_value"/>
-          <label for="star4"></label>
-          <input type="radio" name="star" value="5" id="star5" v-model="new_rating_value"/>
-          <label for="star5"></label>
-          <input type="radio" name="star" value="6" id="star6" v-model="new_rating_value"/>
-          <label for="star6"></label>
-          <input type="radio" name="star" value="7" id="star7" v-model="new_rating_value"/>
-          <label for="star7"></label>
-          <input type="radio" name="star" value="8" id="star8" v-model="new_rating_value"/>
-          <label for="star8"></label>
-          <input type="radio" name="star" value="9" id="star9" v-model="new_rating_value"/>
-          <label for="star9"></label>
-          <input type="radio" name="star" value="10" id="star10" v-model="new_rating_value" />
-          <label for="star10"></label>
+        <div class="edit-stars">
+          <template :key="index" v-for="index in 10">
+            <input type="radio" name="editstar" :value="index" :id="`editstar${index}`" v-model="new_rating_value"/>
+            <label :for="`editstar${index}`">
+              <StarIcon />
+            </label>
+          </template>
         </div>
         <!-- <input type="text" id="title-input" v-model="title"/> -->
         <input type="text" id="body-input" v-model="new_body"/>
@@ -37,34 +27,32 @@
       <div class="review-header">
         <h5>{{ review.username }}</h5>
         <div class="stars">
-          <!-- gwiazdki -->
-          <img src="../assets/logo.png" alt="" />
-          <img src="../assets/logo.png" alt="" />
-          <img src="../assets/logo.png" alt="" />
-          <img src="../assets/logo.png" alt="" />
-          <img src="../assets/logo.png" alt="" />
+          <StarIcon
+            :key="index"
+            v-for="index in 10"
+            :class="{ isRating: review.rating_value === index }"
+          />
         </div>
-        <p>{{ review.rating_value }}</p>
       </div>
-      <div>
-        <!-- <h3>{{ review.title }}</h3> -->
-        <p>{{ review.body }}</p>
-      </div>
+      <!-- <h3>{{ review.title }}</h3> -->
+      <p>{{ review.body }}</p>
     </div>
 
-    <div>
+    <div class="response-container">
       <VotingComponent :review-id="review.id" :total-vote="review.total_vote"/>
-      <button @click="comment_form_is_open = !comment_form_is_open">napisz kom</button>
-      <!-- <div>ilosc komentarzy</div> -->
+      <div class="response-comment-container">
+        <p>{{ comment_amount }} comments</p>
+        <button @click="comment_form_is_open = !comment_form_is_open">write comment...</button>
+      </div>
     </div>
-  </section>
+  </div>
   <div class="write-comment" v-show="comment_form_is_open">
     <form @submit.prevent="addComment">
       <input type="text" id="body-input" v-model="comment_body" />
       <button type="submit">Add comment</button>
     </form>
   </div>
-  <div class="comment-container">
+  <div class="comments-container">
     <CommentComponent
       :key="comment.id"
       v-for="comment in review.comments"
@@ -76,6 +64,9 @@
 <script>
 import CommentComponent from "@/components/CommentComponent.vue";
 import VotingComponent from "@/components/VotingComponent.vue";
+import StarIcon from './icons/IconStar.vue'
+import DeleteIcon from "@/components/icons/IconDelete.vue";
+import EditIcon from "@/components/icons/IconEdit.vue";
 import authAPI from '@/services/auth_api.js';
 import { ref } from 'vue';
 import { useAuthStore } from "@/stores/auth_store.js";
@@ -86,6 +77,9 @@ export default {
   components: {
     VotingComponent,
     CommentComponent,
+    StarIcon,
+    DeleteIcon,
+    EditIcon
   },
   props: ["review"],
   setup(props){
@@ -97,6 +91,7 @@ export default {
     const user_owned = ref(loggedIn.value && userId.value === props.review.user);
     const new_rating_value = ref("");
     const new_body = ref(props.review.body);
+    const comment_amount = props.review.comments.length
 
     async function addComment() {
       try {
@@ -161,39 +156,58 @@ export default {
         //   }
       }
     }
-    return {comment_body, comment_form_is_open, edit_form_is_open, addComment, user_owned, editReview, deleteReview, new_rating_value, new_body}
+    return {comment_body, comment_form_is_open, edit_form_is_open, addComment, user_owned, editReview, deleteReview, new_rating_value, new_body, comment_amount}
   }
 };
 </script>
 
 <style scoped>
-section {
+.review-container {
   text-align: left;
-  margin-top: 5rem;
-  display: flex;
-  flex-direction: column;
+  padding: 1em;
+  margin-top: 3em;
   background-color: var(--clr-main-dark);
-  border-radius: 20px 20px 0 0;
 }
 
-.stars {
-  display: flex;
-}
-
-img {
-  width: 30px;
-}
-
-section > div:nth-of-type(1) {
+.review-header {
   display: flex;
   justify-content: space-between;
-  padding: 2rem;
-  /* width: 80%; */
-  /* flex: 3, 1, 75%; */
+  align-items: center;
 }
 
-comment-container {
-  width: 300px;
-  height: 200px;
+.stars svg {
+  width: 30px;
+  color: var(--clr-star-disabled);
+}
+
+.isRating,
+.stars svg:not(.isRating ~ svg) {
+  color: var(--clr-purple-medium);
+}
+
+.response-container {
+  display: flex;
+  margin-top: 2em;
+}
+
+.response-comment-container {
+  display: flex;
+  align-items: center;
+  margin-left: 4em;
+}
+
+.response-comment-container > button {
+  cursor: pointer;
+  border: 0;
+  background-color: var(--clr-purple-medium);
+  padding: 0.1em 0.6em;
+  border-radius: 20px;
+  margin-left: 1em;
+}
+
+.comments-container {
+  display: flex;
+  flex-direction: column;
+  align-items: end;
 }
 </style>

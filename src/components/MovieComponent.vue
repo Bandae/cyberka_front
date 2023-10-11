@@ -1,5 +1,9 @@
+<script setup>
+import StarIcon from './icons/IconStar.vue'
+</script>
+
 <template>
-  <section>
+  <div class="movie-container">
     <img src="../assets/logo.svg" alt="" />
     <div>
       <div>
@@ -7,16 +11,17 @@
           <h3>{{ movie.title_pl }}</h3>
         </router-link>
         <div class="main-info">
-          <h5>{{ movie.title_eng }}</h5>
-          <h5>{{ movie.year }}</h5>
-          <h5>{{ movie.runtime }}min</h5>
+          <h4>{{ movie.title_eng }}</h4>
+          <h4>{{ movie.year }}</h4>
+          <h4>{{ movie.runtime }}min</h4>
         </div>
       </div>
       <div class="vote-info">
-        <!-- <svg></svg> -->
-        <!-- gwiazdka -->
-        <h5>{{ movie.avg_rating }}</h5>
-        <!-- <p>{{ movie.votes_amount }} reviews</p> -->
+        <StarIcon />
+        <div>
+          <h5>{{ movie.avg_rating }}</h5>
+          <p>{{ movie.review_amount }} reviews</p>
+        </div>
       </div>
       <div class="secondary-info">
         <div class="movie-description">{{ movie.description }}</div>
@@ -24,7 +29,7 @@
         <div>Director: {{movie.director}}  Writer: {{movie.writer}}</div>
       </div>
     </div>
-  </section>
+  </div>
 </template>
 
 <script>
@@ -37,7 +42,7 @@ export default {
 </script>
 
 <style scoped>
-section {
+.movie-container {
   text-align: left;
   margin-top: 5rem;
   display: flex;
@@ -45,31 +50,41 @@ section {
   background-color: var(--clr-main-dark);
   border-radius: 20px;
 }
-h3,
-h5 {
+h3, h4 {
   line-height: 1.2;
   font-size: 2rem;
   padding-bottom: 1em;
 }
-h5 {
+h4 {
   font-size: 1.5rem;
 }
-
-section > div {
-  padding: 2rem;
-  width: 80%;
-  /* flex: 3, 1, 75%; */
+h5 {
+  line-height: 1.2;
+  font-size: 1.5rem;
 }
-section > img {
+.movie-container > div {
+  padding: 2rem;
+}
+.movie-container > img {
   padding: 2rem 2rem 2rem 2rem;
   margin-right: 3rem;
-  flex: 1, 0, 20rem;
 }
 .main-info {
   display: flex;
-  gap: 20px 20px;
+  gap: 20px;
 }
 .vote-info {
   display: flex;
+  margin-bottom: 1em;
+}
+.vote-info > div {
+  display: flex;
+  flex-direction: column;
+  justify-content: end;
+  margin-left: 1em;
+}
+
+svg {
+  color: var(--clr-purple-medium);
 }
 </style>
