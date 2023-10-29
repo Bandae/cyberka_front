@@ -36,25 +36,11 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .movies-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   margin-top: 8rem;
 }
-
-a {
-  text-decoration: none;
-  font-style: normal;
-  color: var(--clr-white);
-}
-
-a:hover {
-  color: var(--clr-purple-dark);
-}
-
-/* .movies-container:first-child {
-  margin-top: 8rem;
-} */
 </style>

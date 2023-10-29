@@ -19,6 +19,7 @@
           </template>
         </div>
         <!-- <input type="text" id="title-input" v-model="title"/> -->
+        <label for="body-input">Text</label>
         <input type="text" id="body-input" v-model="new_body"/>
         <button type="submit">Accept edits</button>
       </form>
@@ -205,9 +206,19 @@ export default {
   margin-left: 1em;
 }
 
+.response-comment-container > button:hover {
+  transform: translateY(-5px);
+}
+
 .comments-container {
   display: flex;
   flex-direction: column;
   align-items: end;
+}
+
+.write-comment form {
+  margin-top: 1em;
+  padding: 1em;
+  background-color: var(--clr-main-dark);
 }
 </style>

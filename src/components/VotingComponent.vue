@@ -92,8 +92,16 @@ button {
   color: var(--clr-upvote);
 }
 
+#upvoteIcon:hover {
+  transform: translateY(-5px);
+}
+
 #downvoteIcon {
   transform: rotate(180deg);
   color: var(--clr-downvote);
+}
+
+#downvoteIcon:hover {
+  transform: rotate(180deg) translateY(5px);
 }
 </style>

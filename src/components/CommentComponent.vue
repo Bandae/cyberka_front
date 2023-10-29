@@ -13,6 +13,7 @@
       <p v-if="!edit_form_is_open">{{ comment.body }}</p>
       <div class="review-form-container" v-if="edit_form_is_open">
         <form @submit.prevent="editComment">
+          <label for="body-input">Text:</label>
           <input type="text" id="body-input" v-model="comment.body"/>
           <button type="submit">Accept edits</button>
         </form>
@@ -98,5 +99,10 @@ export default {
   width: 80%;
   padding: 0.5em;
   background-color: var(--clr-main-dark);
+}
+
+form {
+  margin-top: 1em;
+  padding: 0.5em;
 }
 </style>

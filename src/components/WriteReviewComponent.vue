@@ -65,6 +65,7 @@ export default {
           </template>
         </div>
         <!-- <input type="text" id="title-input" v-model="title"/> -->
+        <label for="body-input">Text</label>
         <input type="text" id="body-input" v-model="body"/>
         <button type="submit">Add review</button>
       </form>

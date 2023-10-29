@@ -43,25 +43,6 @@ body {
   background-image: linear-gradient(var(--clr-purple-dark), var(--clr-purple-medium), var(--clr-purple-light));
 }
 
-header {
-  background-image: linear-gradient(var(--clr-main-dark) 60%, rgba(0, 0, 0, 0));
-  position: fixed;
-  top: 0;
-  height: 7rem;
-  width: 100%;
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  align-items: center;
-}
-
-header h2 {
-  font-family: "Righteous", Arial;
-  font-size: 3rem;
-  letter-spacing: 3px;
-  margin-left: auto;
-  grid-column: 2;
-}
-
 .icon-button {
   white-space: nowrap;
   cursor: pointer;
@@ -69,6 +50,17 @@ header h2 {
   background-color: transparent;
   margin: 0.25em;
   font-size: 1.1rem;
+}
+
+a {
+  text-decoration: none;
+  font-style: normal;
+  cursor: pointer;
+  color: var(--clr-white);
+}
+
+a:hover {
+  color: var(--clr-upvote);
 }
 
 .icon-button:hover {
@@ -94,6 +86,10 @@ img {
   color: var(--clr-star-disabled);
 }
 
+.edit-stars label > svg:hover {
+  transform: translateY(-5px);
+}
+
 .edit-stars :not(input[type="radio"]:checked ~ input[type="radio"]) + label > svg,
 .edit-stars input[type="radio"]:checked + label > svg {
   color: var(--clr-purple-medium);
@@ -106,13 +102,30 @@ img {
   border: 0;
 }
 
-/* 
-ul {
-  list-style-type: none;
-  padding: 0;
+form {
+  padding: 3em;
+  display: flex;
+  flex-direction: column;
 }
 
-li {
-  display: inline-block;
-  margin: 0 10px;
-} */
+input {
+  padding: 10px;
+  margin-bottom: 1em;
+  border: none;
+  border-radius: 0;
+}
+
+input:focus {
+  outline: 2px solid var(--clr-upvote);
+}
+
+form button {
+  padding: 0.4em;
+  width: 6em;
+  align-self: center;
+  border: none;
+}
+
+button:focus {
+  outline: 2px solid var(--clr-upvote);
+}

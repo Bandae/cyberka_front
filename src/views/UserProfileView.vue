@@ -78,12 +78,19 @@ export default {
       <button v-if="allow_movie_adding" @click="add_form_is_open = !add_form_is_open">Add movie to the database</button>
       <div class="review-form-container" v-if="add_form_is_open">
         <form @submit.prevent="addMovie">
+          <label for="title_pl-input">Title pl</label>
           <input type="text" id="title_pl-input" v-model="title_pl"/>
+          <label for="title_eng-input">Title eng</label>
           <input type="text" id="title_eng-input" v-model="title_eng"/>
+          <label for="year-input">Year</label>
           <input type="text" id="year-input" v-model="year"/>
+          <label for="runtime-input">Runtime</label>
           <input type="text" id="runtime-input" v-model="runtime"/>
+          <label for="director-input">Director</label>
           <input type="text" id="director-input" v-model="director"/>
+          <label for="writer-input">Writer</label>
           <input type="text" id="writer-input" v-model="writer"/>
+
           <button type="submit">Add</button>
         </form>
       </div>
@@ -109,5 +116,9 @@ div {
   flex-direction: column;
   align-items: center;
   margin-top: 8rem;
+}
+
+form {
+  background-color: var(--clr-main-dark);
 }
 </style>

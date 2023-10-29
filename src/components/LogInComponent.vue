@@ -64,8 +64,10 @@ export default {
           <li v-for="error in errors">{{ error }}</li>
         </ul>
       </div>
-      <button v-if="!register_is_open" @click="register_is_open = true">register</button>
-      <button v-if="register_is_open" @click="register_is_open = false">log in</button>
+      <!-- <button v-if="!register_is_open" @click="register_is_open = true" class="button-text-only">register</button>
+      <button v-if="register_is_open" @click="register_is_open = false" class="button-text-only">log in</button> -->
+      <a v-if="!register_is_open" @click="register_is_open = true">register</a>
+      <a v-if="register_is_open" @click="register_is_open = false">log in</a>
     </div>
 
     <button class="icon-button" v-if="loggedIn" @click="dropdown_is_open=!dropdown_is_open">
@@ -97,7 +99,7 @@ export default {
   position: absolute;
   top: calc(100% + .25rem);
   background-color: var(--clr-main-dark);
-  padding: 1rem;
+  padding: 0.5em;
   border-radius: .25rem;
   box-shadow: 0 2px 5px 0 rgba(0, 0, 0, .1);
   opacity: 0;
@@ -124,17 +126,14 @@ export default {
   list-style: none;
 }
 
-input {
-  margin-bottom: .5rem;
-}
-
-label {
-  left: 0;
-}
-
 .icon-button > svg {
   width: 40px;
   height: 40px;
   color: var(--clr-white);
 }
+
+form {
+  padding: 0.2em;
+}
+
 </style>

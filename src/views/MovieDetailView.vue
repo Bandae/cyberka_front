@@ -1,4 +1,5 @@
 <script>
+import EditMovieComponent from "@/components/EditMovieComponent.vue";
 import ReviewComponent from "@/components/ReviewComponent.vue";
 import WriteReviewComponent from "@/components/WriteReviewComponent.vue";
 import DeleteIcon from "@/components/icons/IconDelete.vue";
@@ -14,6 +15,7 @@ import { storeToRefs } from 'pinia';
 export default {
   name: "MovieDetailView",
   components: {
+    EditMovieComponent,
     ReviewComponent,
     WriteReviewComponent,
     DeleteIcon,
@@ -104,17 +106,7 @@ export default {
           <DeleteIcon />
         </button>
       </div>
-      <div class="movie-edit-form-container" v-if="edit_form_is_open">
-        <form @submit.prevent="editMovie">
-          <input type="text" id="title_pl-input" v-model="movie.title_pl"/>
-          <input type="text" id="title_eng-input" v-model="movie.title_eng"/>
-          <input type="text" id="year-input" v-model="movie.year"/>
-          <input type="text" id="runtime-input" v-model="movie.runtime"/>
-          <input type="text" id="director-input" v-model="movie.director"/>
-          <input type="text" id="writer-input" v-model="movie.writer"/>
-          <button type="submit">Accept edits</button>
-        </form>
-      </div>
+      <EditMovieComponent class="movie-edit-form-container" v-if="edit_form_is_open" :movie="movie"/>
       <div class="info-container" v-if="!edit_form_is_open">
         <img src="../assets/logo.svg" alt="" />
         <div>
@@ -269,6 +261,10 @@ img {
   padding: 0.1em 0.6em;
   border-radius: 20px;
   font-size: 1.5rem;
+}
+
+.write-review-container > button:hover {
+  transform: translateY(-5px);
 }
 
 .vote-info svg {

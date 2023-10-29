@@ -89,16 +89,9 @@ export default {
 </template>
 
 <style scoped>
-/* form {
-  background-color: var(--clr-main-dark);
-  border-radius: 20px;
-  width: 2rem;
-  height: 600px;
-  height: 400px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-} */
+form {
+  padding: 0.2em;
+}
 
 .errors {
   background-color: red;
