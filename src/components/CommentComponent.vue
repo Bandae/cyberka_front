@@ -17,13 +17,19 @@
           <input type="text" id="body-input" v-model="comment.body"/>
           <button type="submit">Accept edits</button>
         </form>
+        <div v-if="errors.length" class="errors">
+          <ul>
+            <li v-for="error in errors">{{ error }}</li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import authAPI from '@/services/auth_api.js';
+import API from '@/services/api.js';
+import process_errors from '@/services/error_processing.js';
 import DeleteIcon from "@/components/icons/IconDelete.vue";
 import EditIcon from "@/components/icons/IconEdit.vue";
 import { ref } from 'vue';
@@ -42,52 +48,25 @@ export default {
     const authStore = useAuthStore();
     const {loggedIn, userId} = storeToRefs(authStore);
     const user_owned = ref(loggedIn.value && userId.value === props.comment.user);
-    // const new_body = ref(props.comment.body);
     const comment = ref(props.comment)
 
+    const errors = ref([])
+
     async function editComment() {
+      while (errors.value.length) { errors.value.pop(); }
       try {
-        await authAPI().patch(`comment/${comment.value.id}/`, {body:comment.value.body})
+        await API(true).patch(`comment/${comment.value.id}/`, {body:comment.value.body})
         edit_form_is_open.value = false
       }
       catch (err) {
-        console.log(err)
-        // const server_errors = err.response.data
-
-        // for (const error in server_errors) {
-        //   if (server_errors[error].constructor === Array) {
-        //     errors.value.push(error);
-        //     for (const s_er in server_errors[error]){
-        //       errors.value.push(server_errors[error][s_er]);
-        //     }
-        //   }
-        //   else{
-        //     errors.value.push(server_errors[error]);
-        //   }
+        errors.value = process_errors(err)
       }
     }
     async function deleteComment() {
-      try {
-        await authAPI().delete(`comment/${comment.value.id}/`)
-        window.location.reload();
-      }
-      catch (err) {
-        console.log(err)
-        // const server_errors = err.response.data
-
-        // for (const error in server_errors) {
-        //   if (server_errors[error].constructor === Array) {
-        //     errors.value.push(error);
-        //     for (const s_er in server_errors[error]){
-        //       errors.value.push(server_errors[error][s_er]);
-        //     }
-        //   }
-        //   else{
-        //     errors.value.push(server_errors[error]);
-        //   }
-      }
+      await API(true).delete(`comment/${comment.value.id}/`)
+      window.location.reload();
     }
-    return {edit_form_is_open, user_owned, editComment, deleteComment, comment}
+    return {edit_form_is_open, user_owned, editComment, deleteComment, comment, errors}
   }
 };
 </script>

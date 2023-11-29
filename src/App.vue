@@ -1,9 +1,9 @@
 <script setup>
-// TODO: jak jest to podswietlic przycisk od danego vote ktore jest true
 // moze chowac komentarze za guzikiem, po kliknieciu dopiero wziac dokladny serializer recenzji i pokazac a takto tylko ilosc komentarzy. albo 3 pierwsze czy cos takiego.
 // zrobic cos z suspense w app.vue
-// ogarnac wyswietlanie bledow normalnie, wyrzucic caly kod z try catch .post na wsztko (review, vote, comment) do jakiegos service np.
-// dodac bledy w logowaniu wyswietlanie
+// zniknac write_review guzik jak juz ktos napisal recenzje
+// nie pokazywac w recenzji nic poza gwiadkami i nickiem jak nie ma tekstu
+
 import { RouterView } from 'vue-router'
 </script>
 
@@ -13,11 +13,16 @@ import { RouterView } from 'vue-router'
       <img src="@/assets/CybLogo.png" alt="">
       <router-link :to="`/`" class="page-name">CYBERKA</router-link>
     </h2>
-    <LogInComponent />
+    <LogInComponent class="login-component"/>
   </header>
   <Suspense>
     <RouterView />
   </Suspense>
+  <footer>
+    <div>
+      <p>Cyberka</p>
+    </div>
+  </footer>
 </template>
 
 <script>
@@ -29,24 +34,17 @@ export default {
   components: {
     LogInComponent,
   },
-  methods: {
-    getCSRFcookie() {
-      return this.$cookies.get("csrftoken")
-    }
-  },
   async created() {
+    const authStore = useAuthStore();
     try {
-      const token = await this.getCSRFcookie();
       const res = await API(true).get('user-me/');
-      const authStore = useAuthStore();
       authStore.username = res.data.username;
       authStore.loggedIn = true;
       authStore.userId = res.data.id;
       authStore.is_staff = res.data.is_staff;
-      authStore.csrfToken = token;
     }
     catch (err) {
-      console.log(err.message);
+      authStore.loggedIn = false;
     }
   },
 };
@@ -56,8 +54,9 @@ export default {
 header {
   background-image: linear-gradient(var(--clr-main-dark) 60%, rgba(0, 0, 0, 0));
   position: fixed;
+  z-index: 999;
   top: 0;
-  height: 7rem;
+  height: 7em;
   width: 100%;
   display: grid;
   grid-template-columns: 1fr auto 1fr;
@@ -65,24 +64,43 @@ header {
 }
 
 header h2 {
-  margin-left: auto;
   grid-column: 2;
   display: grid;
 }
 
 header img {
   width: 6em;
-
   grid-row: 1 / 4;
   grid-column: 1 / 4;
 }
 
 .page-name {
   font-family: "Righteous", Arial;
-  font-size: 3rem;
+  font-size: calc(var(--fs-big) * 1.3);
   letter-spacing: 3px;
-
   grid-row: 2;
   grid-column: 2 / 5;
+}
+
+@media screen and (max-width: 600px) {
+  header {
+    grid-template-columns: 1fr auto 1fr;
+  }
+
+  header h2 {
+    margin-left: none;
+    grid-column: 2;
+  }
+
+  header img {
+    width: 4em;
+    grid-row: 1 / 4;
+    grid-column: 1 / 4;
+  }
+
+  .login-component {
+    grid-column: 3;
+    /* margin-right: auto; */
+  }
 }
 </style>

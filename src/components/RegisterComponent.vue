@@ -1,31 +1,30 @@
 <script>
 import API from "@/services/api.js";
+import process_errors from '@/services/error_processing.js';
 import { ref } from 'vue';
 
 export default {
   name: "RegisterComponent",
-  setup () {
+  emits: ['register-errors'],
+  setup (props, { emit }) {
     const registered = ref(false);
     const username = ref("");
     const email = ref("");
     const password = ref("");
     const password2 = ref("");
 
-    let errors = ref([])
-
     function valid_form() {
       if (password.value !== password2.value){
-        errors.value.push('Passwords do not match.');
+        emit('register-errors', ['Passwords do not match.']);
       }
       else if (password.value.length < 8){
-        errors.value.push('Password must be at least 8 characters long.');
+        emit('register-errors', ['Password must be at least 8 characters long.']);
       }
       // dodac wiecej
       else return true
     };
 
     async function handleRegister() {
-      while (errors.value.length) { errors.value.pop(); }
       if (!valid_form()){
         return
       }
@@ -35,26 +34,12 @@ export default {
         registered.value = true
       }
       catch (err) {
-        console.log(err.response.data);
-        const server_errors = err.response.data
-
-        for (const error in server_errors) {
-          console.log(server_errors[error])
-          if (server_errors[error].constructor === Array) {
-            for (const s_er in server_errors[error]){
-              errors.value.push(server_errors[error][s_er]);
-            }
-          }
-          else{
-            errors.value.push(server_errors[error]);
-          }
-        }
+        emit('register-errors', process_errors(err));
       }
-      
     };
 
     return {
-      handleRegister, errors, username, email, password, password2, registered
+      handleRegister, username, email, password, password2, registered
     };
   },
 };
@@ -77,11 +62,6 @@ export default {
 
       <button type="submit">Register</button>
     </form>
-    <div v-if="errors.length" class="errors">
-      <ul>
-        <li v-for="error in errors">{{ error }}</li>
-      </ul>
-    </div>
   </div>
   <div v-if="registered">
     You have been registered successfully.
@@ -91,18 +71,6 @@ export default {
 <style scoped>
 form {
   padding: 0.2em;
-}
-
-.errors {
-  background-color: red;
-  padding: 1rem;
-  font-size: small;
-  border-radius: 5%;
-  text-align: left;
-}
-
-.errors ul {
-  list-style: none;
 }
 
 input {

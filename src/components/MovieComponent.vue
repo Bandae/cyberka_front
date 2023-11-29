@@ -45,33 +45,30 @@ export default {
 .movie-container {
   text-align: left;
   margin-top: 5rem;
+  padding: 1em;
   display: flex;
   width: 80%;
   background-color: var(--clr-main-dark);
   border-radius: 20px;
 }
 h3, h4 {
-  line-height: 1.2;
-  font-size: 2rem;
-  padding-bottom: 1em;
+  font-size: calc(var(--fs-big) * 0.9);
+  padding-bottom: 0.2em;
 }
 h4 {
-  font-size: 1.5rem;
+  font-size: calc(var(--fs-big) * 0.5);
 }
 h5 {
-  line-height: 1.2;
-  font-size: 1.5rem;
+  font-size: calc(var(--fs-big) * 0.8);
 }
-.movie-container > div {
-  padding: 2rem;
-}
+
 .movie-container > img {
-  padding: 2rem 2rem 2rem 2rem;
-  margin-right: 3rem;
+  margin-right: 1em;
 }
 .main-info {
   display: flex;
-  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: space-between;
 }
 .vote-info {
   display: flex;
@@ -82,6 +79,16 @@ h5 {
   flex-direction: column;
   justify-content: end;
   margin-left: 1em;
+}
+
+@media screen and (max-width: 400px) {
+  .movie-container {
+    flex-direction: column;
+    width: 90%;
+  }
+  .movie-container > img {
+    margin-right: 0;
+  }
 }
 
 svg {

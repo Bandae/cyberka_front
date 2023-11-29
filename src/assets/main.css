@@ -14,12 +14,32 @@
   --clr-purple-dark: #3E1362;
   --clr-purple-medium: #B26ACD;
   --clr-purple-light: #E68DF2;
-
   --clr-upvote: #0081D7;
   --clr-downvote: #B12669;
-
   --clr-star-disabled: #C4C4C4;
+
+  /* --ff-primary: 'Lato', sans-serif; */
+  --ff-primary: 'Roboto', Helvetica, Arial, sans-serif;
+  --ff-logo: 'Righteous', Arial, serif;
+
+  --fs-base: 1rem;
+  --fs-big: 2rem;
 }
+
+@media screen and (max-width: 600px){
+  :root{
+    --fs-base: 1.1rem;
+    --fs-big: 1.5rem;
+  }
+}
+
+@media screen and (min-width: 2000px){
+  :root{
+    --fs-base: 1.2rem;
+    --fs-big: 2.5rem;
+  }
+}
+
 
 *,
 *::before,
@@ -31,16 +51,31 @@
 
 html {
   color-scheme: dark;
-  font-family: "Roboto", Helvetica, Arial, sans-serif;
+  font-family: var(--ff-primary);
   color: var(--clr-white);
+  font-size: var(--fs-base);
   text-align: center;
 }
 
 body {
-  height: 100%;
+  background-image: linear-gradient(var(--clr-purple-dark), var(--clr-purple-medium), var(--clr-purple-light));
+}
+
+#app {
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background-image: linear-gradient(var(--clr-purple-dark), var(--clr-purple-medium), var(--clr-purple-light));
+}
+
+footer {
+  margin-top: auto;
+  padding: 1em;
+  background: var(--clr-main-dark);
+  font-family: "Righteous", Arial;
+}
+
+h1, h2, h3, h4, h5 {
+  line-height: 1.2;
 }
 
 .icon-button {
@@ -49,7 +84,7 @@ body {
   border: 0;
   background-color: transparent;
   margin: 0.25em;
-  font-size: 1.1rem;
+  font-size: calc(var(--fs-base) * 1.1);
 }
 
 a {
@@ -73,7 +108,7 @@ a:hover {
 }
 
 img {
-  width: 300px;
+  width: clamp(7em, calc(50% + 50px), 15em);
 }
 
 /*  */
@@ -108,15 +143,23 @@ form {
   flex-direction: column;
 }
 
-input {
+input, textarea {
   padding: 10px;
   margin-bottom: 1em;
   border: none;
   border-radius: 0;
 }
 
-input:focus {
+input:focus, textarea:focus {
   outline: 2px solid var(--clr-upvote);
+}
+
+textarea {
+  resize: vertical;
+}
+
+form label {
+  align-self: start;
 }
 
 form button {
@@ -128,4 +171,15 @@ form button {
 
 button:focus {
   outline: 2px solid var(--clr-upvote);
+}
+
+.errors {
+  color: var(--clr-downvote);
+  padding: 1rem;
+  font-size: calc(var(--fs-base) * 0.9);
+  text-align: left;
+}
+
+.errors ul {
+  list-style: none;
 }

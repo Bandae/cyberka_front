@@ -5,8 +5,7 @@ import WriteReviewComponent from "@/components/WriteReviewComponent.vue";
 import DeleteIcon from "@/components/icons/IconDelete.vue";
 import EditIcon from "@/components/icons/IconEdit.vue";
 import StarIcon from '@/components/icons/IconStar.vue'
-import API from "@/services/api";
-import authAPI from '@/services/auth_api.js';
+import API from '@/services/api.js';
 import { ref } from 'vue';
 import { useRoute } from 'vue-router'
 import { useAuthStore } from "@/stores/auth_store.js";
@@ -32,65 +31,20 @@ export default {
     const edit_form_is_open = ref(false)
     
     async function fetchMovie() {
-      const res = await API().get(`movie/${id}`);
+      const res = await API(true).get(`movie/${id}`);
       return res.data;
     }
 
     const movie = ref(await fetchMovie())
 
-    async function editMovie() {
-      try {
-        await authAPI().patch(`movie/${movie.value.id}/`, {
-          title_pl:movie.value.title_pl,
-          title_eng:movie.value.title_eng,
-          year:movie.value.year,
-          runtime:movie.value.runtime,
-          director:movie.value.director,
-          writer:movie.value.writer
-        })
-        window.location.reload();
-      }
-      catch (err) {
-        console.log(err)
-        // const server_errors = err.response.data
-
-        // for (const error in server_errors) {
-        //   if (server_errors[error].constructor === Array) {
-        //     errors.value.push(error);
-        //     for (const s_er in server_errors[error]){
-        //       errors.value.push(server_errors[error][s_er]);
-        //     }
-        //   }
-        //   else{
-        //     errors.value.push(server_errors[error]);
-        //   }
-      }
-    }
     async function deleteMovie() {
-      try {
-        await authAPI().delete(`movie/${movie.value.id}/`)
-        window.location.reload();
-      }
-      catch (err) {
-        console.log(err)
-        // const server_errors = err.response.data
-
-        // for (const error in server_errors) {
-        //   if (server_errors[error].constructor === Array) {
-        //     errors.value.push(error);
-        //     for (const s_er in server_errors[error]){
-        //       errors.value.push(server_errors[error][s_er]);
-        //     }
-        //   }
-        //   else{
-        //     errors.value.push(server_errors[error]);
-        //   }
-      }
+      await API(true).delete(`movie/${movie.value.id}/`)
+      window.location.reload();
     }
     
     allow_movie_editing.value = loggedIn.value && is_staff.value
 
-    return {movie, ReviewFormIsOpen, id, allow_movie_editing, editMovie, deleteMovie, edit_form_is_open}
+    return {movie, ReviewFormIsOpen, id, allow_movie_editing, deleteMovie, edit_form_is_open, loggedIn}
   },
 };
 </script>
@@ -106,7 +60,7 @@ export default {
           <DeleteIcon />
         </button>
       </div>
-      <EditMovieComponent class="movie-edit-form-container" v-if="edit_form_is_open" :movie="movie"/>
+      <EditMovieComponent class="movie-edit-form-container" v-if="edit_form_is_open" :movie="movie" @close-form="edit_form_is_open = false"/>
       <div class="info-container" v-if="!edit_form_is_open">
         <img src="../assets/logo.svg" alt="" />
         <div>
@@ -139,7 +93,7 @@ export default {
           <span class="triangle"></span>
           <h2>User Reviews</h2>
         </div>
-        <button @click="ReviewFormIsOpen = !ReviewFormIsOpen">
+        <button @click="ReviewFormIsOpen = !ReviewFormIsOpen" :disabled="!loggedIn">
           Write review
         </button>
       </div>
@@ -180,16 +134,14 @@ export default {
 }
 
 h3, h4 {
-  line-height: 1.2;
-  font-size: 2rem;
-  padding-bottom: 1em;
+  font-size: calc(var(--fs-big) * 0.9);
+  padding-bottom: 0.2em;
 }
 h4 {
-  font-size: 1.5rem;
+  font-size: calc(var(--fs-big) * 0.6);
 }
 h5 {
-  line-height: 1.2;
-  font-size: 1.5rem;
+  font-size: calc(var(--fs-big) * 0.8);
 }
 
 img {
@@ -198,7 +150,8 @@ img {
 
 .main-info {
   display: flex;
-  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: space-between;
 }
 
 .vote-info {
@@ -260,11 +213,40 @@ img {
   background-color: var(--clr-purple-medium);
   padding: 0.1em 0.6em;
   border-radius: 20px;
-  font-size: 1.5rem;
+  font-size: calc(var(--fs-base) * 1.2);
 }
 
 .write-review-container > button:hover {
   transform: translateY(-5px);
+}
+
+@media screen and (max-width: 400px) {
+  .write-review-container {
+    flex-direction: column;
+  }
+
+  .write-review-container button {
+    margin-top: 1em;
+  }
+
+  .info-container {
+    flex-direction: column;
+  }
+
+  img {
+    margin-right: 0;
+    justify-self: center;
+  }
+}
+
+.write-review-container > button:disabled {
+  cursor: default;
+  color: var(--clr-main-dark);
+  background-color: var(--clr-star-disabled);
+}
+
+.write-review-container > button:hover:disabled {
+  transform: none;
 }
 
 .vote-info svg {

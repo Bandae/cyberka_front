@@ -19,11 +19,10 @@ export default {
     const userInput = ref("")
     const passInput = ref("")
 
-    let errors = ref([])
+    const errors = ref([])
 
     async function logIn() {
       while (errors.value.length) { errors.value.pop(); }
-      
       const server_errors = await authStore.logIn(userInput.value, passInput.value);
       if (server_errors === null) {
         window.location.reload();
@@ -38,8 +37,16 @@ export default {
       window.location.reload();
     };
 
+    function add_errors(server_errors) {
+      while (errors.value.length) { errors.value.pop(); }
+      console.log(server_errors)
+      for (const err of server_errors){
+        errors.value.push(err);
+      }
+    }
+
     return {
-      dropdown_is_open, register_is_open, username, loggedIn, logIn, userInput, passInput, errors, logOut, userId, AccountIcon
+      dropdown_is_open, register_is_open, username, loggedIn, logIn, userInput, passInput, errors, logOut, userId, AccountIcon, add_errors
     };
   },
 };
@@ -58,7 +65,7 @@ export default {
           <button type="submit">log in</button>
         </form>
       </div>
-      <RegisterComponent v-if="register_is_open"/>
+      <RegisterComponent v-if="register_is_open" @register-errors="add_errors"/>
       <div v-if="errors.length" class="errors">
         <ul>
           <li v-for="error in errors">{{ error }}</li>
@@ -112,18 +119,6 @@ export default {
   opacity: 1;
   transform: translateY(0);
   pointer-events: auto;
-}
-
-.errors {
-  background-color: red;
-  padding: 1rem;
-  font-size: small;
-  border-radius: 5%;
-  text-align: left;
-}
-
-.errors ul {
-  list-style: none;
 }
 
 .icon-button > svg {

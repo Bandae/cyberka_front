@@ -1,15 +1,18 @@
 import axios from "axios";
-import { useAuthStore } from "@/stores/auth_store.js";
 // 3000
 export default (
-  withCredentials = false,
-  headers = {'Content-Type': 'application/json'},
-  url = 'http://localhost:8000/'
+  auth = false,
+  url = 'http://localhost:8000/api/'
   ) => {
-
+  if (auth) {
+    return axios.create({
+      withCredentials: true,
+      baseURL: url,
+      xsrfCookieName: 'csrftoken',
+      xsrfHeaderName: 'X-CSRFToken'
+    });
+  }
   return axios.create({
-    withCredentials: withCredentials,
-    headers: headers,
     baseURL: url
   });
 };

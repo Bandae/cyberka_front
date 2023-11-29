@@ -1,10 +1,9 @@
 import { defineStore } from 'pinia';
-import authAPI from '@/services/auth_api.js';
+import API from '@/services/api.js';
 
 export const useAuthStore = defineStore({
   id: 'authStore',
   state: () => ({
-    csrfToken: null,
     loggedIn: false,
     username: '',
     userId: null,
@@ -13,23 +12,22 @@ export const useAuthStore = defineStore({
   actions: {
     async logIn(username, password) {
       try {
-        await authAPI().post('login/', {username:username, password:password});
+        await API(true).post('login/', {username:username, password:password});
         this.loggedIn = true;
         this.username = username;
-        const res = await authAPI().get('user-me/');
+        const res = await API(true).get('user-me/');
         this.userId = res.data.id
         this.is_staff = res.data.is_staff;
         return null
       }
-      catch (err) {}
+      catch (err) {
+        return [err.response.data.detail]
+      }
     },
     async logOut() {
-      try {
-        const res = await authAPI().post('logout/');
-        this.loggedIn = false;
-        this.username = '';
-      }
-      catch (err) {}
+      await API(true).post('logout/');
+      this.loggedIn = false;
+      this.username = '';
     }
   },
 });

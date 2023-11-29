@@ -1,7 +1,7 @@
 <script>
 import ReviewComponent from "@/components/ReviewComponent.vue";
-import API from "@/services/api";
-import authAPI from '@/services/auth_api.js';
+import API from '@/services/api.js';
+import process_errors from '@/services/error_processing.js';
 import { useRoute } from 'vue-router'
 import { ref } from 'vue';
 import { useAuthStore } from "@/stores/auth_store.js";
@@ -36,9 +36,9 @@ export default {
       while (errors.value.length) { errors.value.pop(); }
       // dodac sprawdzanie np year i runtime
       try {
-        await authAPI().post('movies/', {
-          title_pl:props.movieId,
-          title_eng:rating_value.value,
+        await API(true).post('movies/', {
+          title_pl:title_pl.value,
+          title_eng:title_eng.value,
           year:year.value,
           runtime:runtime.value,
           director:director.value,
@@ -47,27 +47,14 @@ export default {
         window.location.reload();
       }
       catch (err) {
-        console.log(err)
-        const server_errors = err.response.data
-
-        for (const error in server_errors) {
-          if (server_errors[error].constructor === Array) {
-            errors.value.push(error);
-            for (const s_er in server_errors[error]){
-              errors.value.push(server_errors[error][s_er]);
-            }
-          }
-          else{
-            errors.value.push(server_errors[error]);
-          }
-        }
+        errors.value = process_errors(err)
       }
     };
 
     const user = await fetchUser()
     allow_movie_adding.value = loggedIn.value && is_staff.value && userId.value === user.id
   
-    return {user, addMovie, add_form_is_open, allow_movie_adding, title_pl, title_eng, year, runtime, director, writer}
+    return {user, addMovie, add_form_is_open, allow_movie_adding, title_pl, title_eng, year, runtime, director, writer, errors}
   },
 };
 </script>
@@ -79,20 +66,25 @@ export default {
       <div class="review-form-container" v-if="add_form_is_open">
         <form @submit.prevent="addMovie">
           <label for="title_pl-input">Title pl</label>
-          <input type="text" id="title_pl-input" v-model="title_pl"/>
+          <input type="text" id="title_pl-input" v-model="title_pl" required/>
           <label for="title_eng-input">Title eng</label>
-          <input type="text" id="title_eng-input" v-model="title_eng"/>
+          <input type="text" id="title_eng-input" v-model="title_eng" required/>
           <label for="year-input">Year</label>
-          <input type="text" id="year-input" v-model="year"/>
+          <input type="text" id="year-input" v-model="year" required/>
           <label for="runtime-input">Runtime</label>
-          <input type="text" id="runtime-input" v-model="runtime"/>
+          <input type="text" id="runtime-input" v-model="runtime" required/>
           <label for="director-input">Director</label>
-          <input type="text" id="director-input" v-model="director"/>
+          <input type="text" id="director-input" v-model="director" required/>
           <label for="writer-input">Writer</label>
-          <input type="text" id="writer-input" v-model="writer"/>
+          <input type="text" id="writer-input" v-model="writer" required/>
 
           <button type="submit">Add</button>
         </form>
+        <div v-if="errors.length" class="errors">
+          <ul>
+            <li v-for="error in errors">{{ error }}</li>
+          </ul>
+        </div>
       </div>
     </div>
     <div class="user-data-container">

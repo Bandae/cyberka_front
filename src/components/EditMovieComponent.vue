@@ -1,15 +1,20 @@
 <script>
-import authAPI from '@/services/auth_api.js';
+import API from '@/services/api.js';
+import process_errors from '@/services/error_processing.js';
+import { ref } from 'vue'
 
 export default {
   name: "EditMovieComponent",
   props: ["movie"],
-  async setup(props) {
+  emits: ['close-form'],
+  async setup(props, { emit }) {
     const movie = props.movie
+    const errors = ref([])
 
     async function editMovie() {
+      while (errors.value.length) { errors.value.pop(); }
       try {
-        await authAPI().patch(`movie/${movie.id}/`, {
+        await API(true).patch(`movie/${movie.id}/`, {
           title_pl:movie.title_pl,
           title_eng:movie.title_eng,
           year:movie.year,
@@ -17,26 +22,14 @@ export default {
           director:movie.director,
           writer:movie.writer
         })
-        
+        emit('close-form');
       }
       catch (err) {
-        console.log(err)
-        // const server_errors = err.response.data
-
-        // for (const error in server_errors) {
-        //   if (server_errors[error].constructor === Array) {
-        //     errors.value.push(error);
-        //     for (const s_er in server_errors[error]){
-        //       errors.value.push(server_errors[error][s_er]);
-        //     }
-        //   }
-        //   else{
-        //     errors.value.push(server_errors[error]);
-        //   }
+        errors.value = process_errors(err)
       }
     }
 
-    return {movie, editMovie}
+    return {movie, editMovie, errors}
   },
 };
 </script>
@@ -58,5 +51,10 @@ export default {
     <input type="text" id="writer-input" v-model="movie.writer"/>
     <button type="submit">Accept edits</button>
   </form>
+  <div v-if="errors.length" class="errors">
+    <ul>
+      <li v-for="error in errors">{{ error }}</li>
+    </ul>
+  </div>
 </div>
 </template>

@@ -23,6 +23,11 @@
         <input type="text" id="body-input" v-model="new_body"/>
         <button type="submit">Accept edits</button>
       </form>
+      <div v-if="errors.length" class="errors">
+        <ul>
+          <li v-for="error in errors">{{ error }}</li>
+        </ul>
+      </div>
     </div>
     <div v-if="!edit_form_is_open">
       <div class="review-header">
@@ -40,18 +45,24 @@
     </div>
 
     <div class="response-container">
-      <VotingComponent :review-id="review.id" :total-vote="review.total_vote"/>
+      <VotingComponent :review-id="review.id" :total-vote="review.total_vote" :currentUserVote="review.current_user_vote"/>
       <div class="response-comment-container">
         <p>{{ comment_amount }} comments</p>
-        <button @click="comment_form_is_open = !comment_form_is_open">write comment...</button>
+        <button @click="comment_form_is_open = !comment_form_is_open" :disabled="!loggedIn">write comment...</button>
       </div>
     </div>
   </div>
   <div class="write-comment" v-show="comment_form_is_open">
     <form @submit.prevent="addComment">
-      <input type="text" id="body-input" v-model="comment_body" />
+      <textarea id="body-input" v-model="comment_body"></textarea>
+      <!-- <input type="text" id="body-input" v-model="comment_body" /> -->
       <button type="submit">Add comment</button>
     </form>
+    <div v-if="com_errors.length" class="errors">
+      <ul>
+        <li v-for="error in com_errors">{{ error }}</li>
+      </ul>
+    </div>
   </div>
   <div class="comments-container">
     <CommentComponent
@@ -68,7 +79,8 @@ import VotingComponent from "@/components/VotingComponent.vue";
 import StarIcon from './icons/IconStar.vue'
 import DeleteIcon from "@/components/icons/IconDelete.vue";
 import EditIcon from "@/components/icons/IconEdit.vue";
-import authAPI from '@/services/auth_api.js';
+import API from '@/services/api.js';
+import process_errors from '@/services/error_processing.js';
 import { ref } from 'vue';
 import { useAuthStore } from "@/stores/auth_store.js";
 import { storeToRefs } from 'pinia';
@@ -93,71 +105,34 @@ export default {
     const new_rating_value = ref("");
     const new_body = ref(props.review.body);
     const comment_amount = props.review.comments.length
+    const errors = ref([])
+    const com_errors = ref([])
 
     async function addComment() {
+      while (com_errors.value.length) { errors.value.pop(); }
       try {
-        await authAPI().post('comments/', {review:props.review.id, body:comment_body.value})
+        await API(true).post('comments/', {review:props.review.id, body:comment_body.value})
         window.location.reload();
       }
       catch (err) {
-        console.log(err)
-        // const server_errors = err.response.data
-
-        // for (const error in server_errors) {
-        //   if (server_errors[error].constructor === Array) {
-        //     errors.value.push(error);
-        //     for (const s_er in server_errors[error]){
-        //       errors.value.push(server_errors[error][s_er]);
-        //     }
-        //   }
-        //   else{
-        //     errors.value.push(server_errors[error]);
-        //   }
+        com_errors.value = process_errors(err)
       }
     }
     async function editReview() {
+      while (errors.value.length) { errors.value.pop(); }
       try {
-        await authAPI().patch(`review/${props.review.id}/`, {rating_value:new_rating_value.value, body:new_body.value})
+        await API(true).patch(`review/${props.review.id}/`, {rating_value:new_rating_value.value, body:new_body.value})
         window.location.reload();
       }
       catch (err) {
-        console.log(err)
-        // const server_errors = err.response.data
-
-        // for (const error in server_errors) {
-        //   if (server_errors[error].constructor === Array) {
-        //     errors.value.push(error);
-        //     for (const s_er in server_errors[error]){
-        //       errors.value.push(server_errors[error][s_er]);
-        //     }
-        //   }
-        //   else{
-        //     errors.value.push(server_errors[error]);
-        //   }
+        errors.value = process_errors(err)
       }
     }
     async function deleteReview() {
-      try {
-        await authAPI().delete(`review/${props.review.id}/`)
-        window.location.reload();
-      }
-      catch (err) {
-        console.log(err)
-        // const server_errors = err.response.data
-
-        // for (const error in server_errors) {
-        //   if (server_errors[error].constructor === Array) {
-        //     errors.value.push(error);
-        //     for (const s_er in server_errors[error]){
-        //       errors.value.push(server_errors[error][s_er]);
-        //     }
-        //   }
-        //   else{
-        //     errors.value.push(server_errors[error]);
-        //   }
-      }
+      await API(true).delete(`review/${props.review.id}/`)
+      window.location.reload();
     }
-    return {comment_body, comment_form_is_open, edit_form_is_open, addComment, user_owned, editReview, deleteReview, new_rating_value, new_body, comment_amount}
+    return {comment_body, comment_form_is_open, edit_form_is_open, addComment, user_owned, editReview, deleteReview, new_rating_value, new_body, comment_amount, loggedIn, errors, com_errors}
   }
 };
 </script>
@@ -210,6 +185,16 @@ export default {
   transform: translateY(-5px);
 }
 
+.response-comment-container > button:disabled {
+  cursor: default;
+  color: var(--clr-main-dark);
+  background-color: var(--clr-star-disabled);
+}
+
+.response-comment-container > button:hover:disabled {
+  transform: none;
+}
+
 .comments-container {
   display: flex;
   flex-direction: column;
@@ -220,5 +205,12 @@ export default {
   margin-top: 1em;
   padding: 1em;
   background-color: var(--clr-main-dark);
+}
+
+@media screen and (max-width: 500px) {
+  .review-header,
+  .response-container {
+    flex-direction: column;
+  }
 }
 </style>
