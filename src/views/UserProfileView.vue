@@ -60,9 +60,9 @@ export default {
 </script>
 
 <template>
-  <div>
+  <div class="user-page-container">
     <div>
-      <button v-if="allow_movie_adding" @click="add_form_is_open = !add_form_is_open">Add movie to the database</button>
+      <button v-if="allow_movie_adding" @click="add_form_is_open = !add_form_is_open" class="add-movie-btn">Add movie to the database</button>
       <div class="review-form-container" v-if="add_form_is_open">
         <form @submit.prevent="addMovie">
           <label for="title_pl-input">Title pl</label>
@@ -103,14 +103,39 @@ export default {
 
 
 <style scoped>
-div {
+.user-page-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 8rem;
+  margin-top: 9em;
+  justify-content: start;
 }
 
 form {
   background-color: var(--clr-main-dark);
+}
+
+.user-data-container {
+  width: 80%;
+  margin-top: 1em;
+  padding: 1em;
+  border-radius: 20px;
+  background-color: var(--clr-main-dark);
+}
+
+.user-data-container > p {
+  margin-bottom: 1em;
+}
+
+.review-form-container {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+.add-movie-btn {
+  padding: 0.4em;
+  width: 8em;
+  align-self: center;
+  border: none;
 }
 </style>

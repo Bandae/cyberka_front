@@ -150,7 +150,7 @@ input, textarea {
   border-radius: 0;
 }
 
-input:focus, textarea:focus {
+input:focus-visible, textarea:focus-visible {
   outline: 2px solid var(--clr-upvote);
 }
 
@@ -169,7 +169,7 @@ form button {
   border: none;
 }
 
-button:focus {
+button:focus-visible {
   outline: 2px solid var(--clr-upvote);
 }
 

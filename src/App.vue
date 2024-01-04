@@ -84,12 +84,7 @@ header img {
 
 @media screen and (max-width: 600px) {
   header {
-    grid-template-columns: 1fr auto 1fr;
-  }
-
-  header h2 {
-    margin-left: none;
-    grid-column: 2;
+    grid-template-columns: minmax(2em, 10em) auto 2em 1fr;
   }
 
   header img {
@@ -99,8 +94,7 @@ header img {
   }
 
   .login-component {
-    grid-column: 3;
-    /* margin-right: auto; */
+    grid-column: 4;
   }
 }
 </style>

@@ -141,7 +141,8 @@ export default {
 .review-container {
   text-align: left;
   padding: 1em;
-  margin-top: 3em;
+  margin-top: 1em;
+  margin-bottom: 1em;
   background-color: var(--clr-main-dark);
 }
 
@@ -152,7 +153,7 @@ export default {
 }
 
 .stars svg {
-  width: 30px;
+  width: 25px;
   color: var(--clr-star-disabled);
 }
 

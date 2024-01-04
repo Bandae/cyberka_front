@@ -146,6 +146,7 @@ h5 {
 
 img {
   margin-right: 3rem;
+  align-self: center;
 }
 
 .main-info {
@@ -220,7 +221,7 @@ img {
   transform: translateY(-5px);
 }
 
-@media screen and (max-width: 400px) {
+@media screen and (max-width: 450px) {
   .write-review-container {
     flex-direction: column;
   }

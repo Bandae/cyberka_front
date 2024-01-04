@@ -54,7 +54,7 @@ export default {
 
 <template>
   <div class="dropdown-container">
-    <button v-if="!loggedIn" @click="dropdown_is_open=!dropdown_is_open">LOG IN</button>
+    <button v-if="!loggedIn" @click="dropdown_is_open=!dropdown_is_open" class="icon-button">Login</button>
     <div v-if="!loggedIn" class="dropdown" :class="{ opened: dropdown_is_open }">
       <div class="login-dropdown" v-if="!register_is_open">
         <form @submit.prevent="logIn">
@@ -131,4 +131,9 @@ form {
   padding: 0.2em;
 }
 
+@media screen and (max-width: 450px) {
+  .dropdown {
+    right: 0;
+  }
+}
 </style>

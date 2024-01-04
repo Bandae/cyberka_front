@@ -74,7 +74,8 @@ export default {
 <style scoped>
 .comment-container {
   text-align: left;
-  margin-top: 2em;
+  margin-top: 0.5em;
+  margin-bottom: 1.5em;
   width: 80%;
   padding: 0.5em;
   background-color: var(--clr-main-dark);
