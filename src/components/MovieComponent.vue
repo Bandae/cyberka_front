@@ -4,7 +4,7 @@ import StarIcon from './icons/IconStar.vue'
 
 <template>
   <div class="movie-container">
-    <img src="../assets/logo.svg" alt="" />
+    <img src="../assets/no_img.jpg" alt="" />
     <div>
       <div>
         <router-link :to="`/movie/${movie.id}`">
@@ -69,7 +69,12 @@ h5 {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+  /* width: 25em; */
 }
+
+/* .main-info > h4 {
+
+} */
 .vote-info {
   display: flex;
   margin-bottom: 1em;

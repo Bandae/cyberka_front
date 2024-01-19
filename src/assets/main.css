@@ -108,7 +108,7 @@ a:hover {
 }
 
 img {
-  width: clamp(7em, calc(50% + 50px), 15em);
+  width: clamp(7em, calc(50% + 50px), 10em);
 }
 
 /*  */

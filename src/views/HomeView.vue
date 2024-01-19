@@ -90,7 +90,7 @@ p {
   margin-bottom: 1em;
 }
 
-@media screen and (max-width: 650px) {
+@media screen and (max-width: 680px) {
   .main-container {
     display: flex;
     flex-direction: column;

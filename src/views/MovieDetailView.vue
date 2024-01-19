@@ -62,7 +62,7 @@ export default {
       </div>
       <EditMovieComponent class="movie-edit-form-container" v-if="edit_form_is_open" :movie="movie" @close-form="edit_form_is_open = false"/>
       <div class="info-container" v-if="!edit_form_is_open">
-        <img src="../assets/logo.svg" alt="" />
+        <img src="../assets/no_img.jpg" alt="" />
         <div>
           <div>
             <div>
