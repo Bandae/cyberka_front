@@ -2,7 +2,7 @@ import axios from "axios";
 // 3000
 export default (
   auth = false,
-  url = 'http://localhost:8000/api/'
+  url = 'https://bandae.pythonanywhere.com/api/'
   ) => {
   if (auth) {
     return axios.create({
